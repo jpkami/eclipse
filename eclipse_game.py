@@ -12,14 +12,12 @@ from pygame.locals import *
 MAP = pygame.sprite.Group()
 #Functions
 
-    #Draw the score (in fact return a list with the rect to draw, drawn later with drawGame())
-def drawLevel(a, x, y):
-    countx = 0
-    county = 0
-    rectList = pygame.sprite.Group()
-    return rectList
-
+    # return a list with the rect to draw, drawn later with drawGame()
 def setMap(w=7,h=9):
+    if w%2==0:
+        w+=1
+    if h%2==0:
+        h+=1
     rectList = pygame.sprite.Group()
     for x in range(-round(w/2),round(w/2)+1,2):
         for y in range(-round(h/2),round(h/2)+1,2):
@@ -55,21 +53,7 @@ def write(text, fontSize, x, y, color=res.WHITE):
 
 #def onTimerTick(pad):
 #    res.PowerUps.update(True)
-    
 
-#Mouse fonction
-def enableMouse(mouseEnabled,pos=None,paddle1=None):
-    if mouseEnabled:
-        relPos = pos[0]-paddle1.rect.left
-        #print ("relpos : "+str(relPos))
-        if relPos > paddle1.w:
-            paddle1.setMovement(1)
-        elif relPos < 0:
-            paddle1.setMovement(-1)
-        else:
-            paddle1.setMovement(0)
-    
-    
 #Now the core of the game
 
 while True:
@@ -111,22 +95,20 @@ while True:
             write('Press s', 120, res.WINDOWWIDTH/4, res.WINDOWHEIGHT/2)
             write('to play!', 120, 3*res.WINDOWWIDTH/4, res.WINDOWHEIGHT/2) 
             
-            write('Press m', 60, res.WINDOWWIDTH/4, res.WINDOWHEIGHT/2+60)
-            write('for mouse control', 60, 3*res.WINDOWWIDTH/4, res.WINDOWHEIGHT/2+60)
+            #write('Press m', 60, res.WINDOWWIDTH/4, res.WINDOWHEIGHT/2+60)
+            #write('for mouse control', 60, 3*res.WINDOWWIDTH/4, res.WINDOWHEIGHT/2+60)
 
             write('Press q', 60, 3*res.WINDOWWIDTH/8, 3*res.WINDOWHEIGHT/4)
             write('to quit.', 60, 5*res.WINDOWWIDTH/8, 3*res.WINDOWHEIGHT/4)
             
-            write('c = AI', 60, res.WINDOWWIDTH - 85, res.WINDOWHEIGHT/4)
+            #write('c = AI', 60, res.WINDOWWIDTH - 85, res.WINDOWHEIGHT/4)
 
         pygame.display.update()
         mainClock.tick(FPS)
         
     #This is the game playing
     while res.gameIsPlaying:
-        pos = pygame.mouse.get_pos()
-        enableMouse(mouseEnabled,pos,None)
-            
+    
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -140,7 +122,7 @@ while True:
             if event.type == KEYUP:
                 print("up")
             if event.type == MOUSEBUTTONUP:
-                print("mb up")
+                #print("mb up")
                 ecartMax=res.HEXMSIZE
                 tMax=None
                 for t in MAP:
@@ -151,22 +133,16 @@ while True:
                         if ecart<ecartMax :
                             ecartMax = ecart
                             tMax=t
-                
-                print(str(tMax.x)+" "+str(tMax.y)+" type = "+str(tMax.type))
+                if tMax != None:
+                    print(str(tMax.x)+" "+str(tMax.y)+" type = "+str(tMax.type))
                 
             if event.type == res.TIMER_TICK:
                 1+1
                 #print("tick")   
                 #onTimerTick(paddle1)
                 
-        #Collision of the paddles and the ball with the sides
-
         drawGame(res.gameIsPlaying,gameMenu,res.displayMenu)
 
-        #Acceleration of the ball
-        #ball.setSpeed(ball.speed[0]*1.005, ball.speed[1])
-        #print(ball.speed)
-        #write('Press escape to give up this game', 15, WINDOWWIDTH/8, WINDOWHEIGHT-SIZESIDES*2)
 
         pygame.display.update()
         mainClock.tick(FPS)
