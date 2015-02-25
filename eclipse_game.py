@@ -141,9 +141,19 @@ while True:
                 print("up")
             if event.type == MOUSEBUTTONUP:
                 print("mb up")
+                ecartMax=res.HEXMSIZE
+                tMax=None
                 for t in MAP:
                     if t.rect.collidepoint(event.pos):
-                        print(str(t.x)+" "+str(t.y)+" type = "+str(t.type))
+                        #print(str(t.x)+" "+str(t.y)+" type = "+str(t.type))
+                        ecart = abs(t.rect.centerx-event.pos[0])+abs(t.rect.centery-event.pos[1])
+                        #print("rect = "+str(t.rect.centerx-event.pos[0])+","+str(t.rect.centery-event.pos[1])+" ecart = "+str(ecart))
+                        if ecart<ecartMax :
+                            ecartMax = ecart
+                            tMax=t
+                
+                print(str(tMax.x)+" "+str(tMax.y)+" type = "+str(tMax.type))
+                
             if event.type == res.TIMER_TICK:
                 1+1
                 #print("tick")   
