@@ -12,31 +12,50 @@ from pygame.locals import *
 MAP = pygame.sprite.Group()
 #Functions
 popUpText =""
-
+gameSurface = windowSurface.copy()
+zoomFactor = 1
+def zoomWindow(direction):
+    global zoomFactor
+    if direction == "in":
+        zoomFactor +=0.1
+        # s = pygame.transform.smoothscale(ws,(round(res.WINDOWWIDTH*1.5),round(res.WINDOWHEIGHT*1.5)))
+        # gameSurface.fill(res.BLACK)
+        # gameSurface.blit(s,windowSurface.get_rect())
+        print("zoom in")
+    elif direction == "out":
+        if zoomFactor>0.2:
+            zoomFactor -=0.1
+        print("zoom out")
     
     #This function draws everything in the game. 
 def drawGame(gameIsPlaying,gameMenu,displayMenu):
-    windowSurface.blit(res.BACKGROUND,windowSurface.get_rect())
-    
+    # windowSurface.blit(res.BACKGROUND,windowSurface.get_rect())
+    windowSurface.fill(res.BLACK)
     if gameIsPlaying:
-        MAP.draw(windowSurface)
-        writePopUp(popUpText)
+        gameSurface.fill(res.BLACK)
+        MAP.draw(gameSurface)
+        writePopUp(popUpText,gameSurface)
+        if zoomFactor != 1:
+            s = pygame.transform.smoothscale(gameSurface,(round(res.WINDOWWIDTH*zoomFactor),round(res.WINDOWHEIGHT*zoomFactor)))
+            gameSurface.fill(res.BLACK)
+            gameSurface.blit(s,gameSurface.get_rect())
+        windowSurface.blit(gameSurface,windowSurface.get_rect())
         #print("playing")
     if displayMenu:
         gameMenu.draw(windowSurface)     
 
     #A function for writing a text with the most basic font
-def write(text, fontSize, x, y, color=res.WHITE):
+def write(text, fontSize, x, y,s=windowSurface, color=res.WHITE):
     font = pygame.font.SysFont(None, fontSize)
     
     textR = font.render(text, True, color)
     textRect = textR.get_rect()
     textRect.centerx = x
     textRect.centery = y
-    windowSurface.blit(textR, textRect)
+    s.blit(textR, textRect)
 
-def writePopUp(pu):
-    write(pu,20,res.WINDOWWIDTH/2,20)
+def writePopUp(pu,s=windowSurface):
+    write(pu,20,res.WINDOWWIDTH/2,20,s)
     
 #def onTimerTick(pad):
 #    res.PowerUps.update(True)
@@ -44,25 +63,34 @@ def writePopUp(pu):
 #Now the core of the game
 
 def onMouseUp(event):
+    global popUpText
     if not res.gameIsPlaying:
         1+1
     elif res.gameIsPlaying:
-        ecartMax=res.HEXMSIZE
-        tMax=None
-        for t in MAP:
-            if t.rect.collidepoint(event.pos):
-                #print(str(t.x)+" "+str(t.y)+" type = "+str(t.type))
-                ecart = abs(t.rect.centerx-event.pos[0])+abs(t.rect.centery-event.pos[1])
-                #print("rect = "+str(t.rect.centerx-event.pos[0])+","+str(t.rect.centery-event.pos[1])+" ecart = "+str(ecart))
-                if ecart<ecartMax :
-                    ecartMax = ecart
-                    tMax=t
-        if tMax != None:
-            tMax.rotate(60)
-            global popUpText
-            popUpText = str(tMax.x)+" "+str(tMax.y)+" edges = "+str(tMax.edges)+" angle = "+str(tMax.angle)
-            #writePopUp(txt)
-            #print(txt)
+        if event.button == 4:
+            zoomWindow("in")
+        elif event.button == 5:
+            zoomWindow("out")
+            
+        elif event.button == 1:
+            # popUpText = str(event)
+            ecartMax=res.HEXMSIZE
+            tMax=None
+            for t in MAP:
+                if t.rect.collidepoint(event.pos):
+                    #print(str(t.x)+" "+str(t.y)+" type = "+str(t.type))
+                    ecart = abs(t.rect.centerx-event.pos[0])+abs(t.rect.centery-event.pos[1])
+                    #print("rect = "+str(t.rect.centerx-event.pos[0])+","+str(t.rect.centery-event.pos[1])+" ecart = "+str(ecart))
+                    if ecart<ecartMax :
+                        ecartMax = ecart
+                        tMax=t
+            if tMax != None:
+                if tMax.isInitialised:
+                    tMax.rotate(-60)
+                else:
+                    tMax.initTile()
+                popUpText = str(tMax.x)+" "+str(tMax.y)+" edges = "+str(tMax.edges)+" angle = "+str(tMax.angle)
+
 
 def onKeyDown(event):
     if not res.gameIsPlaying:

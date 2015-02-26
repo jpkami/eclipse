@@ -40,6 +40,7 @@ def setMap(w=7,h=9):
  
     # The Tile for Map
 class TileM(pygame.sprite.Sprite):
+    isInitialised = False
     type=0
     edges = dict()
     h=round(res.HEXMSIZE*math.sqrt(3)/2)
@@ -63,22 +64,26 @@ class TileM(pygame.sprite.Sprite):
         
         if abs(x)>2 and self.type == 4:
             self.type+=4
-        
-        if self.type==0:
-            self.image= pygame.transform.smoothscale(self.loadimage("GC"),(self.w,self.h))
-        elif self.type==2 :
-            self.image = pygame.transform.smoothscale(self.loadimage("R1"),(self.w,self.h))
-        elif self.type==4 :
-            self.image = pygame.transform.smoothscale(self.loadimage("R2"),(self.w,self.h))
-        else :
-            self.image = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
-            
-        self.initWHoles()
-        #print(str(self.rect))
+
+        # self.image = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
+        self.image = self.texture
     
     def loadimage(self,name):
         return pygame.image.load(os.path.join('data',name+'.png')).convert_alpha()
-        
+     
+    def initTile(self):
+        if not self.isInitialised:
+            if self.type==0:
+                self.image= pygame.transform.smoothscale(self.loadimage("GC"),(self.w,self.h))
+            elif self.type==2 :
+                self.image = pygame.transform.smoothscale(self.loadimage("R1"),(self.w,self.h))
+            elif self.type==4 :
+                self.image = pygame.transform.smoothscale(self.loadimage("R2"),(self.w,self.h))
+            else :
+                self.image = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
+            self.initWHoles()
+            self.isInitialised = True
+     
     def initWHoles(self):
         d = dict()
         min=1
