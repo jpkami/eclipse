@@ -14,6 +14,18 @@ MAP = pygame.sprite.Group()
 popUpText =""
 gameSurface = windowSurface.copy()
 zoomFactor = 1
+showMenu = False
+
+def setMenu():
+    menuSurface = pygame.Surface((round(res.WINDOWWIDTH/2),(round(res.WINDOWHEIGHT/2))))
+    menuSurface.fill(pygame.Color(200,50,50,30))
+    menuSurfaceRect = menuSurface.get_rect()
+    menuSurfaceRect.centerx = windowSurface.get_rect().centerx
+    menuSurfaceRect.centery = windowSurface.get_rect().centery
+    
+    return (menuSurface,menuSurfaceRect)
+    
+    
 def zoomWindow(direction):
     global zoomFactor
     if direction == "in":
@@ -35,6 +47,11 @@ def drawGame(gameIsPlaying,gameMenu,displayMenu):
         gameSurface.fill(res.BLACK)
         MAP.draw(gameSurface)
         writePopUp(popUpText,gameSurface)
+        if showMenu:
+            menu = setMenu()
+            write("ff Working !",20,menu[0].get_rect().centerx,20,menu[0])
+            # writePopUp("Working !",menu[0])
+            gameSurface.blit(menu[0],menu[1])
         if zoomFactor != 1:
             s = pygame.transform.smoothscale(gameSurface,(round(res.WINDOWWIDTH*zoomFactor),round(res.WINDOWHEIGHT*zoomFactor)))
             gameSurface.fill(res.BLACK)
@@ -113,6 +130,10 @@ def onKeyDown(event):
         if event.key == K_p:
             res.gameIsPlaying = False
             res.displayMenu = True
+        if event.key == K_l:
+            res.gameIsPlaying = True
+            global showMenu
+            showMenu = not showMenu
     
     
         
