@@ -35,6 +35,7 @@ CYAN = (0, 255, 255)
 
 #Constant Surfaces
 WHEX = pygame.image.load(os.path.join('data','wHex.png')).convert_alpha()
+WHOLE = pygame.image.load(os.path.join('data','WHole.png')).convert_alpha()
 GC = pygame.image.load(os.path.join('data','GC.png')).convert_alpha()
 R1 = pygame.image.load(os.path.join('data','R1.png')).convert_alpha()
 R2 = pygame.image.load(os.path.join('data','R2.png')).convert_alpha()
