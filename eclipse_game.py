@@ -104,8 +104,9 @@ def onMouseUp(event):
             if tMax != None:
                 if tMax.isInitialised:
                     tMax.rotate(-60)
+                    tMax.getConnectedNeighbours(dMAP)
                 else:
-                    tMax.initTile()
+                    tMax.initTile(dMAP)
                 popUpText = str(tMax.x)+" "+str(tMax.y)+" edges = "+str(tMax.edges)+" angle = "+str(tMax.angle)
 
 
@@ -142,7 +143,9 @@ while True:
     #offset pour centrer les briques
     if not res.gameInited:
         gameMenu = men.GameMenu()
-        MAP= emap.setMap()
+        tmpMAP= emap.setMap()
+        MAP=tmpMAP[0]
+        dMAP=tmpMAP[1]
         res.gameInited = True
     #if not pygame.mixer.Channel(1).get_busy():
         #pygame.mixer.Channel(1).play(INTRO)

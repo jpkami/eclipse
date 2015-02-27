@@ -1,7 +1,7 @@
 import data.Resources as res
 pygame = res.pygame
 
-class button:
+class button(pygame.sprite.Sprite):
     buttonSurface = None
     x=0
     y=0
@@ -26,11 +26,15 @@ class GameMenu(pygame.sprite.Sprite):
     menuSurface = None
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.surface = pygame.Surface((abs(res.WINDOWWIDTH/2),abs(res.WINDOWHEIGHT/2)))
+        self.surface = pygame.Surface((abs(res.WINDOWWIDTH*7/8),abs(res.WINDOWHEIGHT*7/8)))
         self.surface.fill(res.DKBLUE)
         self.surface.set_alpha(200)
-        self.write('Game Menu', 40, self.surface.get_rect().width/2, 60)
-        self.rect = pygame.Rect(abs(res.WINDOWWIDTH/4),abs(res.WINDOWHEIGHT/4),abs(res.WINDOWWIDTH/2),abs(res.WINDOWHEIGHT/2))
+        self.rect = self.surface.get_rect()
+        self.rect.centerx = pygame.display.get_surface().get_rect().centerx
+        self.rect.centery = pygame.display.get_surface().get_rect().centery
+    
+    def initInterface(self):
+        
     
     def setSFXVolume(self,vol):
         for sound in res.ALLSOUNDS:

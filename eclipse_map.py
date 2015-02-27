@@ -20,29 +20,36 @@ HexH = round(HexW*math.sqrt(3/4))
 edgesCenter = [(round(HexW/2),0,0), (round(7*HexW/8)-5,round(HexH/4)+5,-60), (round(7*HexW/8)-5,round(3*HexH/4)-5,-120), (round(HexW/2),HexH,180), (round(HexW/8)+5,round(3*HexH/4)-5,120), (round(HexW/8)+5,round(HexH/4)+5,60)]
 WHimage = pygame.transform.smoothscale(res.WHOLE,(round(HexW/16),round(HexH/16)))
 #Classes
-    # return a list with the rect to draw, drawn later with drawGame()
+    # return a list with the rect to draw, drawn later with drawGame(), and and dict to get the Tiles from coordinates
 def setMap(w=7,h=9):
     if w%2==0:
         w+=1
     if h%2==0:
         h+=1
-    rectList = pygame.sprite.Group()
+    tileGroup = pygame.sprite.Group()
+    tileDict = dict()
     for x in range(-round(w/2),round(w/2)+1,2):
         for y in range(-round(h/2),round(h/2)+1,2):
-            rectList.add(TileM(x,y))
+            t= TileM(x,y)
+            tileGroup.add(t)
+            tileDict[(x,y)]=t
     
     for x in range(1-round(w/2),round(w/2),2):
         for y in range(1-round(h/2),round(h/2),2):
-            rectList.add(TileM(x,y))
+            t= TileM(x,y)
+            tileGroup.add(t)
+            tileDict[(x,y)]=t
                 
-    return rectList
+    return (tileGroup,tileDict)
  
  
     # The Tile for Map
 class TileM(pygame.sprite.Sprite):
     isInitialised = False
-    type=0
+    dmap = dict()
     edges = dict()
+    conNeigh = dict()
+    type=0
     h=round(res.HEXMSIZE*math.sqrt(3)/2)
     w=res.HEXMSIZE
     texture = pygame.transform.smoothscale(res.WHEX,(w,h))
@@ -68,10 +75,29 @@ class TileM(pygame.sprite.Sprite):
         # self.image = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
         self.image = self.texture
     
+    def getCoord(self):
+        return (self.x,self.y)
+    
+    def getConnectedNeighbours(self,tmap):
+        pos=((0,-2),(1,-1),(1,1),(0,2),(-1,1),(-1,-1))
+        d=dict()
+        for e in self.edges:
+            p=pos[int(e)]
+            sp = (self.x+p[0],self.y+p[1])
+            if sp in tmap and tmap[sp].isInitialised:
+                print("adjacent teste "+str(tmap[sp].toString()))
+                matchingedge = int(e)+3
+                if matchingedge>5:
+                    matchingedge-=6
+                if str(matchingedge) in tmap[sp].edges:
+                    d[e]=tmap[sp]
+        self.conNeigh = d        
+        print(str(self.conNeigh))
+    
     def loadimage(self,name):
         return pygame.image.load(os.path.join('data',name+'.png')).convert_alpha()
      
-    def initTile(self):
+    def initTile(self,dmap):
         if not self.isInitialised:
             if self.type==0:
                 self.image= pygame.transform.smoothscale(self.loadimage("GC"),(self.w,self.h))
@@ -82,6 +108,7 @@ class TileM(pygame.sprite.Sprite):
             else :
                 self.image = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
             self.initWHoles()
+            self.dmap = dmap
             self.isInitialised = True
      
     def initWHoles(self):
@@ -123,17 +150,28 @@ class TileM(pygame.sprite.Sprite):
         return s
     
     def rotate(self,angle):
-        #s = self.image.copy()
-        ri = pygame.transform.rotate(self.image,angle)
-        r = ri.get_rect()
-        r.centerx = self.rect.centerx
-        r.centery = self.rect.centery
-        self.image = ri
-        self.rect = r
-        self.angle += angle
-        
-        if abs(self.angle) == 360:
-            self.angle = 0
+        #s = self.image.copy()        
+        if angle%60 == 0:
+            ri = pygame.transform.rotate(self.image,angle)
+            r = ri.get_rect()
+            r.centerx = self.rect.centerx
+            r.centery = self.rect.centery
+            self.image = ri
+            self.rect = r
+            self.angle += angle
+            
+            tmpdict = dict()
+            for e in self.edges:
+                newE = int(e)-int(angle/60)
+                if newE>5:
+                    newE -=6
+                if newE<0:
+                    newE +=6
+                tmpdict[str(newE)] = self.edges[e]
+            self.edges = tmpdict
+            
+            if abs(self.angle) == 360:
+                self.angle = 0
     
     def draw(self):            
         pygame.sprite.Sprite.draw(self)
