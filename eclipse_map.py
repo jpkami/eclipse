@@ -26,7 +26,7 @@ def setMap(w=7,h=9):
         w+=1
     if h%2==0:
         h+=1
-    tileGroup = pygame.sprite.Group()
+    tileGroup = pygame.sprite.LayeredUpdates()
     tileDict = dict()
     for x in range(-round(w/2),round(w/2)+1,2):
         for y in range(-round(h/2),round(h/2)+1,2):

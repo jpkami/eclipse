@@ -9,6 +9,7 @@ class button(pygame.sprite.Sprite):
     h=0
     
     def __init__(self,DestSurface,x,y,w,h,color = res.WHITE):
+        pygame.sprite.Sprite.__init__(self)
      
         self.buttonSurface = pygame.Surface((w,h))
         self.buttonSurface.fill(color)
@@ -34,7 +35,7 @@ class GameMenu(pygame.sprite.Sprite):
         self.rect.centery = pygame.display.get_surface().get_rect().centery
     
     def initInterface(self):
-        
+        1+1
     
     def setSFXVolume(self,vol):
         for sound in res.ALLSOUNDS:

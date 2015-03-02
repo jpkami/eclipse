@@ -54,8 +54,11 @@ def drawGame(gameIsPlaying,gameMenu,displayMenu):
             gameSurface.blit(menu[0],menu[1])
         if zoomFactor != 1:
             s = pygame.transform.smoothscale(gameSurface,(round(res.WINDOWWIDTH*zoomFactor),round(res.WINDOWHEIGHT*zoomFactor)))
+            r = s.get_rect()
+            r.center=gameSurface.get_rect().center
             gameSurface.fill(res.BLACK)
-            gameSurface.blit(s,gameSurface.get_rect())
+            gameSurface.blit(s,r)
+            # gameSurface.blit(s,gameSurface.get_rect())
         windowSurface.blit(gameSurface,windowSurface.get_rect())
         #print("playing")
     if displayMenu:
@@ -93,7 +96,9 @@ def onMouseUp(event):
             # popUpText = str(event)
             ecartMax=res.HEXMSIZE
             tMax=None
-            for t in MAP:
+            for t in MAP.get_sprites_at(event.pos):
+                # print("gspat ="+str(t.toString()))
+            # for t in MAP:
                 if t.rect.collidepoint(event.pos):
                     #print(str(t.x)+" "+str(t.y)+" type = "+str(t.type))
                     ecart = abs(t.rect.centerx-event.pos[0])+abs(t.rect.centery-event.pos[1])
