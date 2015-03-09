@@ -40,6 +40,9 @@ def manageEvent(event):
 
 def onMouseUp(event):
     print(str(allSprites.get_sprites_at(event.pos)))
+    clickedSprites = allSprites.get_sprites_at(event.pos)
+    if len(clickedSprites)>0:
+        clickedSprites[-1].onClick()
     
 def onKeyDown(event):
     pass
@@ -52,11 +55,7 @@ def drawMenu():
 
 def drawHome():
     write('ECLIPSE', 120, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/4)
-    write('A new Dawn for the Galaxy', 100, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/2) 
-    b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50)
-    b.writecenter("start", 20, res.BLACK)
-    if b not in allSprites:
-        allSprites.add(b)
+    write('A new Dawn for the Galaxy', 100, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/2)
     allSprites.draw(windowSurface)
     write('press s to start', 40, res.WINDOWWIDTH/2, res.WINDOWHEIGHT-40)
 
@@ -72,7 +71,11 @@ while True:
         res.gameInited = True
         gameIsPlaying = False
         menuIsShowing = False
-        allSprites = pygame.sprite.LayeredUpdates()
+        allSprites = pygame.sprite.LayeredUpdates() 
+        #c'est sale
+        b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50)
+        b.writecenter("start", 20, res.BLACK)
+        allSprites.add(b)
     
     for event in pygame.event.get():
         manageEvent(event)

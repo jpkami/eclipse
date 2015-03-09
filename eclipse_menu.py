@@ -35,6 +35,9 @@ class Button(pygame.sprite.Sprite):
         textRect.center = (self.rect.w/2,self.rect.h/2)
 #         self.menuSurface.blit(textR, textRect)    
         self.image.blit(textR, textRect)   
+    
+    def onClick(self):
+        print("bouton clique")
          
 class GameMenu(pygame.sprite.Sprite):
     menuSurface = None
