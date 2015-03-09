@@ -2,8 +2,8 @@
 import data.Resources as res
 import eclipse_map as emap
 import eclipse_menu as men
-import time
-import random
+# import time
+# import random
 pygame=res.pygame
 windowSurface = res.windowSurface
 mainClock = res.mainClock
@@ -117,15 +117,6 @@ def onMouseUp(event):
 
 def onKeyDown(event):
     if not res.gameIsPlaying:
-        if event.key == ord('s'):
-            mouseEnabled = False
-            res.gameIsPlaying = True
-        if event.key == ord('m'):
-            mouseEnabled = True
-            res.gameIsPlaying = True
-        if event.key == ord('c'):
-            mouseEnabled = False
-            res.gameIsPlaying = True
         if event.key == K_p:
             res.gameIsPlaying = True
             res.displayMenu = False

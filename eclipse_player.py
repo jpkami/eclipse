@@ -12,5 +12,5 @@ class Player():
     
     def __init__(self,type,x,y):
     
-        
-   
+        pass
+      
