@@ -113,19 +113,19 @@ class TileM(pygame.sprite.Sprite):
      
     def initWHoles(self):
         d = dict()
-        min=1
-        max=6
+        WHmin=1
+        WHmax=6
         if self.type == 0 :
-            min=6
+            WHmin=6
         elif self.type == 2:
-            min=2
-            max=4
-        elif self.type == 4:
-            max=3
+            WHmin=2
+            WHmax=4
+        elif self.type == 4: 
+            WHmax=3
         else :
-            max=2
-        print("min = "+str(min)+" max = "+str(max))
-        nbWH = random.randint(min,max)
+            WHmax=2
+        print("WHmin = "+str(WHmin)+" WHmax = "+str(WHmax))
+        nbWH = random.randint(WHmin,WHmax)
         print("len ="+str(len(d))+" nbWH "+str(nbWH))
         while len(d)<nbWH:
             seg = random.randint(0,5)
