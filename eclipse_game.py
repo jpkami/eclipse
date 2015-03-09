@@ -13,7 +13,7 @@ MAP = pygame.sprite.Group()
 #Functions
 popUpText =""
 gameSurface = windowSurface.copy()
-zoomFactor = 1
+zoomFactor = 1 
 showMenu = False
 
 def setMenu():
