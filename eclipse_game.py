@@ -118,13 +118,13 @@ def onMouseUp(event):
 def onKeyDown(event):
     if not res.gameIsPlaying:
         if event.key == ord('s'):
-            mouseEnabled = False
+#             mouseEnabled = False
             res.gameIsPlaying = True
         if event.key == ord('m'):
-            mouseEnabled = True
+#             mouseEnabled = True
             res.gameIsPlaying = True
         if event.key == ord('c'):
-            mouseEnabled = False
+#             mouseEnabled = False
             res.gameIsPlaying = True
         if event.key == K_p:
             res.gameIsPlaying = True
@@ -186,8 +186,8 @@ while True:
         
     #This is the game playing
     while res.gameIsPlaying:
-    
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == QUIT:
                 pygame.quit()
                 res.sys.exit()
@@ -197,6 +197,7 @@ while True:
                 1+1
             if event.type == MOUSEBUTTONUP:
                 #print("mb up")
+                print("events"+str(events))
                 onMouseUp(event)
                 
             if event.type == res.TIMER_TICK:

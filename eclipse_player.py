@@ -8,9 +8,43 @@ pygame=res.pygame
 
     # The Player
 class Player():
-    type=0
     
-    def __init__(self,type,x,y):
-    
+    def __init__(self,tile):
+        self.ressources[0]= 2
+        self.ressources[1]= 2
+        self.ressources[2] = 2
+        self.hasPassed =False
         pass
+    
+    def newTurn(self):
+        self.hasPassed = False
+        pass
+    
+    def addHex(self,hexM):
+        self.hexTable.add(hexM)
+        pass
+        
+    def explore(self):
+        pass
+    
+    def influence(self):
+        pass
+    
+    def research(self):
+        pass
+    
+    def upgrade(self):
+        pass
+    
+    def build(self):
+        pass
+    
+    def move(self):
+        pass
+    
+    def playerPass(self):
+        self.hasPassed = True
+        pass
+    
+    
       

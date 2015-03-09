@@ -1,18 +1,22 @@
 import data.Resources as res
 pygame = res.pygame
 
-class button(pygame.sprite.Sprite):
-    buttonSurface = None
+class Button(pygame.sprite.Sprite):
+    #buttonSurface = None
     x=0
     y=0
     w=0
     h=0
     
-    def __init__(self,DestSurface,x,y,w,h,color = res.WHITE):
+    def __init__(self,x,y,w,h,color = res.BLUE):
         pygame.sprite.Sprite.__init__(self)
-     
-        self.buttonSurface = pygame.Surface((w,h))
-        self.buttonSurface.fill(color)
+#         self.image=None
+        buttonSurface = pygame.Surface((w,h))
+        buttonSurface.fill(color)
+        self.image = buttonSurface
+        r = pygame.Rect(x,y,w,h)
+        r.center=(x,y)
+        self.rect = r
         
     def write(self, text, fontSize, x, y, color=res.WHITE):
     
@@ -21,8 +25,17 @@ class button(pygame.sprite.Sprite):
         textRect = textR.get_rect()
         textRect.centerx = x
         textRect.centery = y
-        self.menuSurface.blit(textR, textRect)    
+#         self.menuSurface.blit(textR, textRect)    
+        self.image.blit(textR, textRect)    
         
+    def writecenter(self, text, fontSize, color=res.WHITE):    
+        font = pygame.font.SysFont('helvetica', fontSize)
+        textR = font.render(text, True, color)
+        textRect = textR.get_rect()
+        textRect.center = (self.rect.w/2,self.rect.h/2)
+#         self.menuSurface.blit(textR, textRect)    
+        self.image.blit(textR, textRect)   
+         
 class GameMenu(pygame.sprite.Sprite):
     menuSurface = None
     def __init__(self):
