@@ -120,7 +120,7 @@ class TileM(pygame.sprite.Sprite):
         elif self.type == 2:
             WHmin=2
             WHmax=4
-        elif self.type == 4: 
+        elif self.type == 4:
             WHmax=3
         else :
             WHmax=2
