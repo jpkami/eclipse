@@ -30,7 +30,7 @@ def write(text, fontSize, x, y,s=windowSurface, color=res.WHITE):
     textRect.centery = y
     s.blit(textR, textRect)
     
-def manageEvent(event,dMap):
+def manageEvent(event):
     if event.type == QUIT:
         pygame.quit()
         res.sys.exit()
@@ -43,27 +43,24 @@ def manageEvent(event,dMap):
         if event.chMenu == "playerSelect":
             initHome(homeSurface, 1)
         if isinstance(event.chMenu, int):
-            if event.chMenu == 2:
-                dMAP[(0,4)].initTile(dMap)
-                dMAP[(0,-4)].initTile(dMap)
-            elif event.chMenu == 3:
-                dMAP[(0,4)].initTile(dMap)
-                dMAP[(2,-2)].initTile(dMap)
-                dMAP[(-2,-2)].initTile(dMap)
-            elif event.chMenu == 4:
-                dMAP[(2,2)].initTile(dMap)
-                dMAP[(-2,2)].initTile(dMap)
-                dMAP[(2,-2)].initTile(dMap)
-                dMAP[(-2,-2)].initTile(dMap)
-            
+            emap.initMapForPlayers(dMAP, event.chMenu)            
             global gameIsPlaying
             gameIsPlaying = True
+    if event.type == res.TILEEVENT:
+        if isinstance(event.tile, emap.TileM):
+            if event.canRotate:
+                event.tile.rotate(-60)
 #             print("nbJoueur = "+str(event.chMenu))
         
 
 def onMouseUp(event):
-#     print(str(allSprites.get_sprites_at(event.pos)))
-    clickedSprites = allSprites.get_sprites_at(event.pos)
+#     print(str(allHomeSprites.get_sprites_at(event.pos)))
+    clickedSprites = None
+    if not gameIsPlaying and not menuIsShowing:
+        clickedSprites = allHomeSprites.get_sprites_at(event.pos)
+    elif gameIsPlaying:
+        clickedSprites = allMapSprites.get_sprites_at(event.pos)
+    
     if len(clickedSprites)>0:
         clickedSprites[-1].onClick()
     
@@ -71,23 +68,25 @@ def onKeyDown(event):
     if event.key==pygame.K_DELETE:
         pygame.quit()
         res.sys.exit()    
-    if event.key == pygame.K_s:
+    if event.key == pygame.K_h:
         global gameIsPlaying
-        gameIsPlaying = True
+        gameIsPlaying = False
+        global menuIsShowing
+        menuIsShowing = False
     pass
 
 def drawGame():
     gameSurface.fill(res.BLACK)
     MAP.draw(gameSurface)
     windowSurface.blit(gameSurface,gameSurface.get_rect())
-#     allSprites.draw(gameSurface)
+#     allHomeSprites.draw(gameSurface)
 
 def drawMenu():
     gameMenu.draw(windowSurface)
 
 def drawHome():
     windowSurface.blit(homeSurface,homeSurface.get_rect())
-    allSprites.draw(homeSurface)
+    allHomeSprites.draw(homeSurface)
 
 def initGame(gameSurface):
     pass
@@ -102,21 +101,20 @@ def initHome(homeSurface,player = 0):
     if player == 0:
         b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50,"start", 20,res.BLUE, res.BLACK)
         b.setFunction({"chMenu":"playerSelect"})
-        allSprites.add(b)
+        allHomeSprites.add(b)
     if player>0:
-        allSprites.empty()
+        allHomeSprites.empty()
         b2 = men.Button(res.WINDOWWIDTH/4,3*res.WINDOWHEIGHT/4+50,50,50,"2",10,res.RED, res.BLACK)
         b2.setFunction({"chMenu":2})
-        allSprites.add(b2)
+        allHomeSprites.add(b2)
         b3 = men.Button(2*res.WINDOWWIDTH/4,3*res.WINDOWHEIGHT/4+50,50,50,"3",10,res.RED, res.BLACK)
         b3.setFunction({"chMenu":3})
-        allSprites.add(b3)
+        allHomeSprites.add(b3)
         b4 = men.Button(3*res.WINDOWWIDTH/4,3*res.WINDOWHEIGHT/4+50,50,50,"4",10,res.RED, res.BLACK)
         b4.setFunction({"chMenu":4})
-        allSprites.add(b4)
+        allHomeSprites.add(b4)
         write('select the number of players', 40, res.WINDOWWIDTH/2, 3*res.WINDOWHEIGHT/4,homeSurface)
-    
-dMap = None
+
 while True:
     if not res.gameInited:
         gameMenu = men.GameMenu()
@@ -126,14 +124,15 @@ while True:
         res.gameInited = True
         gameIsPlaying = False
         menuIsShowing = False
-        allSprites = pygame.sprite.LayeredUpdates()
+        allHomeSprites = pygame.sprite.LayeredUpdates()
+        allMapSprites = MAP
         gameSurface = windowSurface.copy()
         menuSurface = windowSurface.copy()
         homeSurface = windowSurface.copy()
         initHome(homeSurface)
     
     for event in pygame.event.get():
-        manageEvent(event,dMap)
+        manageEvent(event)
     
     if gameIsPlaying:
         drawGame()        
