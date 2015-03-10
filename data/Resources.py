@@ -18,10 +18,13 @@ pygame.mixer.pre_init(22050, -16, 2, 1024)
 pygame.init()
 mainClock = pygame.time.Clock()
 #Timers Constants for Power Ups
-TIMER_TICK = USEREVENT +1
+# TIMER_TICK = USEREVENT +1
+BUTTONEVENT = USEREVENT
+TILEEVENT = USEREVENT+1
+
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 
-pygame.display.set_caption('Running_window')
+pygame.display.set_caption('Eclipse - the Game')
 
 
 BLACK = (0, 0, 0)
@@ -47,7 +50,7 @@ INTRO.set_volume(0.0)
 ALLSOUNDS.append(INTRO)
 
 
-pygame.time.set_timer(TIMER_TICK,1000)
+# pygame.time.set_timer(TIMER_TICK,1000)
 displayMenu = False
 gameIsPlaying = False
 gameInited = False

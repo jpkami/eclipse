@@ -10,6 +10,7 @@ import eclipse_map as emap
 import eclipse_menu as men
 import time
 import random
+from test.test_typechecks import Integer
 pygame=res.pygame
 windowSurface = res.windowSurface
 mainClock = res.mainClock
@@ -37,10 +38,29 @@ def manageEvent(event):
         onKeyDown(event)
     if event.type == MOUSEBUTTONUP:
         onMouseUp(event)
+    if event.type == res.BUTTONEVENT:
+        print(str(event))
+        if event.chMenu == "playerSelect":
+            initHome(homeSurface, 1)
+        if isinstance(event.chMenu, int):
+            emap.initMapForPlayers(dMAP, event.chMenu)            
+            global gameIsPlaying
+            gameIsPlaying = True
+    if event.type == res.TILEEVENT:
+        if isinstance(event.tile, emap.TileM):
+            if event.canRotate:
+                event.tile.rotate(-60)
+#             print("nbJoueur = "+str(event.chMenu))
+        
 
 def onMouseUp(event):
-    print(str(allSprites.get_sprites_at(event.pos)))
-    clickedSprites = allSprites.get_sprites_at(event.pos)
+#     print(str(allHomeSprites.get_sprites_at(event.pos)))
+    clickedSprites = None
+    if not gameIsPlaying and not menuIsShowing:
+        clickedSprites = allHomeSprites.get_sprites_at(event.pos)
+    elif gameIsPlaying:
+        clickedSprites = allMapSprites.get_sprites_at(event.pos)
+    
     if len(clickedSprites)>0:
         clickedSprites[-1].onClick()
     
@@ -48,36 +68,52 @@ def onKeyDown(event):
     if event.key==pygame.K_DELETE:
         pygame.quit()
         res.sys.exit()    
-    if event.key == pygame.K_s:
+    if event.key == pygame.K_h:
         global gameIsPlaying
-        gameIsPlaying = True
+        gameIsPlaying = False
+        global menuIsShowing
+        menuIsShowing = False
     pass
 
 def drawGame():
     gameSurface.fill(res.BLACK)
     MAP.draw(gameSurface)
     windowSurface.blit(gameSurface,gameSurface.get_rect())
-    allSprites.draw(gameSurface)
+#     allHomeSprites.draw(gameSurface)
 
 def drawMenu():
     gameMenu.draw(windowSurface)
 
 def drawHome():
     windowSurface.blit(homeSurface,homeSurface.get_rect())
-    allSprites.draw(homeSurface)
+    allHomeSprites.draw(homeSurface)
 
 def initGame(gameSurface):
     pass
 
-def initHome(homeSurface):
+def initHome(homeSurface,player = 0):
+    homeSurface.fill(res.BLACK)
     write('ECLIPSE', 120, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/4,homeSurface)
-    write('A new Dawn for the Galaxy', 100, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/2,homeSurface)#c'est sale
-    b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50)
-    b.writecenter("start", 20, res.BLACK)
-    b.onClick = lambda x="":print("c'est la fonction lambda qui est cliquee")
-    allSprites.add(b)
-    write('press s to start', 40, res.WINDOWWIDTH/2, res.WINDOWHEIGHT-40,homeSurface)
-    
+    write('A new Dawn for the Galaxy', 100, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/2,homeSurface)
+#     b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50)
+#     b.writecenter("start", 20, res.BLACK)
+#     b.onClick = lambda x="":print("c'est la fonction lambda qui est cliquee")
+    if player == 0:
+        b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50,"start", 20,res.BLUE, res.BLACK)
+        b.setFunction({"chMenu":"playerSelect"})
+        allHomeSprites.add(b)
+    if player>0:
+        allHomeSprites.empty()
+        b2 = men.Button(res.WINDOWWIDTH/4,3*res.WINDOWHEIGHT/4+50,50,50,"2",10,res.RED, res.BLACK)
+        b2.setFunction({"chMenu":2})
+        allHomeSprites.add(b2)
+        b3 = men.Button(2*res.WINDOWWIDTH/4,3*res.WINDOWHEIGHT/4+50,50,50,"3",10,res.RED, res.BLACK)
+        b3.setFunction({"chMenu":3})
+        allHomeSprites.add(b3)
+        b4 = men.Button(3*res.WINDOWWIDTH/4,3*res.WINDOWHEIGHT/4+50,50,50,"4",10,res.RED, res.BLACK)
+        b4.setFunction({"chMenu":4})
+        allHomeSprites.add(b4)
+        write('select the number of players', 40, res.WINDOWWIDTH/2, 3*res.WINDOWHEIGHT/4,homeSurface)
 
 while True:
     if not res.gameInited:
@@ -88,7 +124,8 @@ while True:
         res.gameInited = True
         gameIsPlaying = False
         menuIsShowing = False
-        allSprites = pygame.sprite.LayeredUpdates()
+        allHomeSprites = pygame.sprite.LayeredUpdates()
+        allMapSprites = MAP
         gameSurface = windowSurface.copy()
         menuSurface = windowSurface.copy()
         homeSurface = windowSurface.copy()

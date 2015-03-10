@@ -7,8 +7,8 @@ class Button(pygame.sprite.Sprite):
     y=0
     w=0
     h=0
-    
-    def __init__(self,x,y,w,h,color = res.BLUE):
+
+    def __init__(self,x,y,w,h,text=None,fontSize=10,color = res.BLUE,tColor=res.WHITE):
         pygame.sprite.Sprite.__init__(self)
 #         self.image=None
         buttonSurface = pygame.Surface((w,h))
@@ -17,8 +17,10 @@ class Button(pygame.sprite.Sprite):
         r = pygame.Rect(x,y,w,h)
         r.center=(x,y)
         self.rect = r
-        self.event = pygame.event.Event(pygame.USEREVENT, {})
-        
+        self.event = pygame.event.Event(res.BUTTONEVENT, {})
+        if text is not None:
+            self.writecenter(text, fontSize, tColor)
+    
     def write(self, text, fontSize, x, y, color=res.WHITE):
     
         font = pygame.font.SysFont('helvetica', fontSize)
@@ -38,11 +40,10 @@ class Button(pygame.sprite.Sprite):
         self.image.blit(textR, textRect)   
     
     def setFunction(self,args):
-        self.event = pygame.event.Event(pygame.USEREVENT, args)
+        self.event = pygame.event.Event(res.BUTTONEVENT, args)
     
     def onClick(self):
-        
-        print("bouton clique")
+        pygame.event.post(self.event)
          
 class GameMenu(pygame.sprite.Sprite):
     menuSurface = None

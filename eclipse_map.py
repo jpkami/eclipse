@@ -39,10 +39,26 @@ def setMap(w=7,h=9):
             t= TileM(x,y)
             tileGroup.add(t)
             tileDict[(x,y)]=t
-                
+    for t in tileGroup:
+        t.setdMap(tileDict)
+    tileDict[(0,0)].initTile()
+    tileDict[(0,0)].setFunction({"tile":tileDict[(0,0)],"canRotate":False})
     return (tileGroup,tileDict)
  
- 
+def initMapForPlayers(dMAP,player):
+    if player == 2:
+        dMAP[(0,4)].initTile()
+        dMAP[(0,-4)].initTile()
+    elif player == 3:
+        dMAP[(0,4)].initTile()
+        dMAP[(2,-2)].initTile()
+        dMAP[(-2,-2)].initTile()
+    elif player == 4:
+        dMAP[(2,2)].initTile()
+        dMAP[(-2,2)].initTile()
+        dMAP[(2,-2)].initTile()
+        dMAP[(-2,-2)].initTile() 
+        
     # The Tile for Map
 class TileM(pygame.sprite.Sprite):
     isInitialised = False
@@ -58,7 +74,7 @@ class TileM(pygame.sprite.Sprite):
     y=0
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
-        
+        self.isVisible = False
         self.l=res.CENTERX+self.w*3*x/4-self.w/2
         self.t=res.CENTERY+self.h*y/2-self.h/2
         self.rect = pygame.Rect(self.l,self.t,self.w,self.h)
@@ -74,7 +90,12 @@ class TileM(pygame.sprite.Sprite):
 
         # self.image = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
         self.image = self.texture
-    
+#         self.image = pygame.surface.Surface((0,0))
+        self.event = pygame.event.Event(res.TILEEVENT, {"tile":self,"canRotate":False})
+        
+    def setVisible(self,b):
+        self.isVisible = b
+        
     def getCoord(self):
         return (self.x,self.y)
     
@@ -97,7 +118,7 @@ class TileM(pygame.sprite.Sprite):
     def loadimage(self,name):
         return pygame.image.load(os.path.join('data',name+'.png')).convert_alpha()
      
-    def initTile(self,dmap):
+    def initTile(self):
         if not self.isInitialised:
             if self.type==0:
                 self.image= pygame.transform.smoothscale(self.loadimage("GC"),(self.w,self.h))
@@ -108,8 +129,12 @@ class TileM(pygame.sprite.Sprite):
             else :
                 self.image = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
             self.initWHoles()
-            self.dmap = dmap
+#             self.dmap = dmap
+            self.setFunction({"tile":self,"canRotate":True})
             self.isInitialised = True
+    
+    def setdMap(self,dMap):
+        self.dmap = dMap
      
     def initWHoles(self):
         d = dict()
@@ -173,13 +198,20 @@ class TileM(pygame.sprite.Sprite):
             if abs(self.angle) == 360:
                 self.angle = 0
     
-    def draw(self):            
-        pygame.sprite.Sprite.draw(self)
+    def draw(self,surface):
+        print("tile : "+str((self.x,self.y))) 
+        if self.isVisible:
+            print("tile visible: "+str((self.x,self.y)))            
+            pygame.sprite.Sprite.draw(self,surface)
     
     def kill (self):
         pygame.sprite.Sprite.kill(self)
  
-
+    def setFunction(self,args):
+        self.event = pygame.event.Event(res.TILEEVENT, args)
+        
+    def onClick(self):
+        pygame.event.post(self.event)
  
 class GameScore:
     val = 0
