@@ -1,6 +1,6 @@
 class Spaceship:
     
-    def __init__(self,player,spaceshipType="",model):
+    def __init__(self,player,model,spaceshipType=""):
         
         canons = []
         missiles = []
@@ -24,7 +24,6 @@ class Spaceship:
         
         self.isSlowedDown = False
         self.player = player
-        self.type = type
         self.canons =  canons
         self.missiles =  missiles
         self.init = init
@@ -33,7 +32,7 @@ class Spaceship:
         self.vie = vie
         self.deplacement = deplacement
         self.energie = energie
-        self.Type = spaceshipType
+        self.type = spaceshipType
     
     def move(self):
         pass
@@ -47,13 +46,13 @@ class Spaceship:
 class Intercepteur(Spaceship):
      
     def __init__(self,player):    
-        Spaceship.__init__(self,player,"Intercepteur",player.modeleIntercepteur)
+        Spaceship.__init__(self,player,spaceshipType="Intercepteur",model=player.modeleIntercepteur)
     
     
 class Fregate(Spaceship):
     
     def __init__(self,player):
-        Spaceship.__init__(self,player,"Fregate",player.modeleIntercepteur)
+           Spaceship.__init__(self,player,spaceshipType="Fregate",model=player.modeleFregate)
     
     
 class Croiseur(Spaceship):

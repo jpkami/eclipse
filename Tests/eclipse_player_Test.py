@@ -21,7 +21,7 @@ class Test(unittest.TestCase):
     def test_player_setup(self):
         
         joueur = HegemonieOrion()
-        print(joueur.flotte[0])
+        print(joueur.flotte[0].type)
 
 
 if __name__ == "__main__":

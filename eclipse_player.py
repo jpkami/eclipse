@@ -1,11 +1,12 @@
 #from data.Resources import *
-import data.Resources as res
+#import data.Resources as res
 import random
 import math
 from eclipse_spaceship import Spaceship, Intercepteur, Fregate
-from eclipse_map import TileM
+from eclipse_amelioration import *
+#from eclipse_map import TileM
 
-pygame=res.pygame
+#pygame=res.pygame
 #Classes
 
     # The Player
@@ -26,10 +27,10 @@ class Player():
         self.croiseur = 2
         self.base_stellaire = 4 
         self.tuilesAmbassadeur = 3
-        self.hexTable = pygame.sprite.Group()
-        self.hexTable.add(tile)
-        self.modeleIntercepteur = []
-        self.modeleFregate = []
+#        self.hexTable = pygame.sprite.Group()
+#        self.hexTable.add(tile)
+        self.modeleIntercepteur = [CanonPlasma()]
+        self.modeleFregate = [CanonPlasma()]
         self.modeleCroiseur = []
         self.modeleBaseStellaire = []
         
@@ -78,7 +79,7 @@ class Human(Player):
 class HegemonieOrion(Player):
     def __init__(self):
         Player.__init__(self, None)
-        self.flotte.remove()
+        del(self.flotte[-1])
         self.flotte.append(Fregate(player=self)) 
     
     def move(self):#TODO override
