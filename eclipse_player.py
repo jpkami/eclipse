@@ -2,6 +2,8 @@
 import data.Resources as res
 import random
 import math
+from eclipse_spaceship import Spaceship, Intercepteur, Fregate
+from eclipse_map import TileM
 
 pygame=res.pygame
 #Classes
@@ -9,20 +11,31 @@ pygame=res.pygame
     # The Player
 class Player():
     
-    def __init__(self,tile):
-        self.credits= 2
-        self.science= 2
-        self.materiaux = 2
-        self.cubesCredit = 15
-        self.cubesScience = 15
-        self.cubesMateriaux = 15
-        self.disquesInfluence = 15
+    def __init__(self,tile,playerCredits=2,science=2,materiaux=2,cubesCredit=11,cubesScience=11,cubesMateriaux=11,
+                 disquesInfluence=16):
+        self.credits= playerCredits
+        self.science= science
+        self.materiaux = materiaux
+        self.cubesCredit = cubesCredit
+        self.cubesScience = cubesScience
+        self.cubesMateriaux = cubesMateriaux
+        self.disquesInfluence = disquesInfluence
         self.tuilesCombat= [0]*4
-        self.intercepteurs = 0
-        self.fregate = 0
-        self.croiseur = 0
-        self.base_stellaire = 0
+        self.intercepteurs = 8
+        self.fregate = 4
+        self.croiseur = 2
+        self.base_stellaire = 4 
+        self.tuilesAmbassadeur = 3
         self.hexTable = pygame.sprite.Group()
+        self.hexTable.add(tile)
+        self.modeleIntercepteur = []
+        self.modeleFregate = []
+        self.modeleCroiseur = []
+        self.modeleBaseStellaire = []
+        
+        
+        self.flotte = []
+        self.flotte.append(Intercepteur(player=self))
         self.hasPassed =False
         pass
     
@@ -58,3 +71,15 @@ class Player():
     
     
       
+class Human(Player):
+    def __init__(self,tile):
+        Player.__init__(self, tile) 
+
+class HegemonieOrion(Player):
+    def __init__(self):
+        Player.__init__(self, None)
+        self.flotte.remove()
+        self.flotte.append(Fregate(player=self)) 
+    
+    def move(self):#TODO override
+        Player.move(self)
