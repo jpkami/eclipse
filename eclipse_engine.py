@@ -10,6 +10,7 @@ import eclipse_map as emap
 import eclipse_menu as men
 import time
 import random
+from test.test_typechecks import Integer
 pygame=res.pygame
 windowSurface = res.windowSurface
 mainClock = res.mainClock
@@ -37,9 +38,16 @@ def manageEvent(event):
         onKeyDown(event)
     if event.type == MOUSEBUTTONUP:
         onMouseUp(event)
+    if event.type == pygame.USEREVENT:
+        print(str(event))
+        if event.chMenu == "playerSelect":
+            initHome(homeSurface, 1)
+        if isinstance(event.chMenu, int):
+            print("nbJoueur = "+str(event.chMenu))
+        
 
 def onMouseUp(event):
-    print(str(allSprites.get_sprites_at(event.pos)))
+#     print(str(allSprites.get_sprites_at(event.pos)))
     clickedSprites = allSprites.get_sprites_at(event.pos)
     if len(clickedSprites)>0:
         clickedSprites[-1].onClick()
@@ -69,14 +77,29 @@ def drawHome():
 def initGame(gameSurface):
     pass
 
-def initHome(homeSurface):
+def initHome(homeSurface,player = 0):
+    homeSurface.fill(res.BLACK)
     write('ECLIPSE', 120, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/4,homeSurface)
-    write('A new Dawn for the Galaxy', 100, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/2,homeSurface)#c'est sale
-    b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50)
-    b.writecenter("start", 20, res.BLACK)
-    b.onClick = lambda x="":print("c'est la fonction lambda qui est cliquee")
-    allSprites.add(b)
-    write('press s to start', 40, res.WINDOWWIDTH/2, res.WINDOWHEIGHT-40,homeSurface)
+    write('A new Dawn for the Galaxy', 100, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/2,homeSurface)
+#     b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50)
+#     b.writecenter("start", 20, res.BLACK)
+#     b.onClick = lambda x="":print("c'est la fonction lambda qui est cliquee")
+    if player == 0:
+        b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50,"start", 20,res.BLUE, res.BLACK)
+        b.setFunction({"chMenu":"playerSelect"})
+        allSprites.add(b)
+    if player>0:
+        allSprites.empty()
+        b2 = men.Button(res.WINDOWWIDTH/4,3*res.WINDOWHEIGHT/4+50,50,50,"2",10,res.RED, res.BLACK)
+        b2.setFunction({"chMenu":2})
+        allSprites.add(b2)
+        b3 = men.Button(2*res.WINDOWWIDTH/4,3*res.WINDOWHEIGHT/4+50,50,50,"3",10,res.RED, res.BLACK)
+        b3.setFunction({"chMenu":3})
+        allSprites.add(b3)
+        b4 = men.Button(3*res.WINDOWWIDTH/4,3*res.WINDOWHEIGHT/4+50,50,50,"4",10,res.RED, res.BLACK)
+        b4.setFunction({"chMenu":4})
+        allSprites.add(b4)
+        write('select the number of players', 40, res.WINDOWWIDTH/2, 3*res.WINDOWHEIGHT/4,homeSurface)
     
 
 while True:
