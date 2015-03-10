@@ -3,6 +3,7 @@ import os
 import sys
 from pygame.locals import *
 
+
 #Constant of the board of the game
 WINDOWWIDTH = 1024
 WINDOWHEIGHT = 768

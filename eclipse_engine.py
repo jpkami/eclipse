@@ -8,6 +8,7 @@ Created on 9 mars 2015
 import data.Resources as res
 import eclipse_map as emap
 import eclipse_menu as men
+import eclipse_player_interface as epintf
 import time
 import random
 from test.test_typechecks import Integer
@@ -43,7 +44,7 @@ def manageEvent(event):
         if event.chMenu == "playerSelect":
             initHome(homeSurface, 1)
         if isinstance(event.chMenu, int):
-            emap.initMapForPlayers(dMAP, event.chMenu)            
+            emap.initMapForPlayers(dMAP, event.chMenu)
             global gameIsPlaying
             gameIsPlaying = True
     if event.type == res.TILEEVENT:
@@ -126,6 +127,8 @@ while True:
         menuIsShowing = False
         allHomeSprites = pygame.sprite.LayeredUpdates()
         allMapSprites = MAP
+        intf = epintf.PlayerInterface(windowSurface)
+        allMapSprites.add(intf)            
         gameSurface = windowSurface.copy()
         menuSurface = windowSurface.copy()
         homeSurface = windowSurface.copy()

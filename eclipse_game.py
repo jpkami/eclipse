@@ -200,8 +200,8 @@ while True:
                 print("events"+str(events))
                 onMouseUp(event)
                 
-            if event.type == res.TIMER_TICK:
-                1+1
+#             if event.type == res.TIMER_TICK:
+#                 1+1
                 #print("tick")   
                 #onTimerTick(paddle1)
                 
