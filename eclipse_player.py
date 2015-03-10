@@ -10,9 +10,19 @@ pygame=res.pygame
 class Player():
     
     def __init__(self,tile):
-        self.ressources[0]= 2
-        self.ressources[1]= 2
-        self.ressources[2] = 2
+        self.credits= 2
+        self.science= 2
+        self.materiaux = 2
+        self.cubesCredit = 15
+        self.cubesScience = 15
+        self.cubesMateriaux = 15
+        self.disquesInfluence = 15
+        self.tuilesCombat= [0]*4
+        self.intercepteurs = 0
+        self.fregate = 0
+        self.croiseur = 0
+        self.base_stellaire = 0
+        self.hexTable = pygame.sprite.Group()
         self.hasPassed =False
         pass
     
