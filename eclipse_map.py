@@ -39,7 +39,7 @@ def setMap(w=7,h=9):
             t= TileM(x,y)
             tileGroup.add(t)
             tileDict[(x,y)]=t
-                
+    tileDict[(0,0)].initTile(tileDict)          
     return (tileGroup,tileDict)
  
  
@@ -58,7 +58,7 @@ class TileM(pygame.sprite.Sprite):
     y=0
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
-        
+        self.isVisible = False
         self.l=res.CENTERX+self.w*3*x/4-self.w/2
         self.t=res.CENTERY+self.h*y/2-self.h/2
         self.rect = pygame.Rect(self.l,self.t,self.w,self.h)
@@ -74,7 +74,12 @@ class TileM(pygame.sprite.Sprite):
 
         # self.image = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
         self.image = self.texture
-    
+        self.image = pygame.surface.Surface((0,0))
+        self.event = pygame.event.Event(res.TILEEVENT, {})
+        
+    def setVisible(self,b):
+        self.isVisible = b
+        
     def getCoord(self):
         return (self.x,self.y)
     
@@ -173,13 +178,20 @@ class TileM(pygame.sprite.Sprite):
             if abs(self.angle) == 360:
                 self.angle = 0
     
-    def draw(self):            
-        pygame.sprite.Sprite.draw(self)
+    def draw(self,surface):
+        print("tile : "+str((self.x,self.y))) 
+        if self.isVisible:
+            print("tile visible: "+str((self.x,self.y)))            
+            pygame.sprite.Sprite.draw(self,surface)
     
     def kill (self):
         pygame.sprite.Sprite.kill(self)
  
-
+    def setFunction(self,args):
+        self.event = pygame.event.Event(res.TILEEVENT, args)
+        
+    def onClick(self,args):
+        pygame.event.post(self.event)
  
 class GameScore:
     val = 0

@@ -17,7 +17,7 @@ class Button(pygame.sprite.Sprite):
         r = pygame.Rect(x,y,w,h)
         r.center=(x,y)
         self.rect = r
-        self.event = pygame.event.Event(pygame.USEREVENT, {})
+        self.event = pygame.event.Event(res.BUTTONEVENT, {})
         if text is not None:
             self.writecenter(text, fontSize, tColor)
     
@@ -40,7 +40,7 @@ class Button(pygame.sprite.Sprite):
         self.image.blit(textR, textRect)   
     
     def setFunction(self,args):
-        self.event = pygame.event.Event(pygame.USEREVENT, args)
+        self.event = pygame.event.Event(res.BUTTONEVENT, args)
     
     def onClick(self):
         pygame.event.post(self.event)

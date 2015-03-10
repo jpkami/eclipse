@@ -30,7 +30,7 @@ def write(text, fontSize, x, y,s=windowSurface, color=res.WHITE):
     textRect.centery = y
     s.blit(textR, textRect)
     
-def manageEvent(event):
+def manageEvent(event,dMap):
     if event.type == QUIT:
         pygame.quit()
         res.sys.exit()
@@ -38,12 +38,27 @@ def manageEvent(event):
         onKeyDown(event)
     if event.type == MOUSEBUTTONUP:
         onMouseUp(event)
-    if event.type == pygame.USEREVENT:
+    if event.type == res.BUTTONEVENT:
         print(str(event))
         if event.chMenu == "playerSelect":
             initHome(homeSurface, 1)
         if isinstance(event.chMenu, int):
-            print("nbJoueur = "+str(event.chMenu))
+            if event.chMenu == 2:
+                dMAP[(0,4)].initTile(dMap)
+                dMAP[(0,-4)].initTile(dMap)
+            elif event.chMenu == 3:
+                dMAP[(0,4)].initTile(dMap)
+                dMAP[(2,-2)].initTile(dMap)
+                dMAP[(-2,-2)].initTile(dMap)
+            elif event.chMenu == 4:
+                dMAP[(2,2)].initTile(dMap)
+                dMAP[(-2,2)].initTile(dMap)
+                dMAP[(2,-2)].initTile(dMap)
+                dMAP[(-2,-2)].initTile(dMap)
+            
+            global gameIsPlaying
+            gameIsPlaying = True
+#             print("nbJoueur = "+str(event.chMenu))
         
 
 def onMouseUp(event):
@@ -65,7 +80,7 @@ def drawGame():
     gameSurface.fill(res.BLACK)
     MAP.draw(gameSurface)
     windowSurface.blit(gameSurface,gameSurface.get_rect())
-    allSprites.draw(gameSurface)
+#     allSprites.draw(gameSurface)
 
 def drawMenu():
     gameMenu.draw(windowSurface)
@@ -101,7 +116,7 @@ def initHome(homeSurface,player = 0):
         allSprites.add(b4)
         write('select the number of players', 40, res.WINDOWWIDTH/2, 3*res.WINDOWHEIGHT/4,homeSurface)
     
-
+dMap = None
 while True:
     if not res.gameInited:
         gameMenu = men.GameMenu()
@@ -118,7 +133,7 @@ while True:
         initHome(homeSurface)
     
     for event in pygame.event.get():
-        manageEvent(event)
+        manageEvent(event,dMap)
     
     if gameIsPlaying:
         drawGame()        
