@@ -121,13 +121,14 @@ class TileM(pygame.sprite.Sprite):
     def initTile(self):
         if not self.isInitialised:
             if self.type==0:
-                self.image= pygame.transform.smoothscale(self.loadimage("GC"),(self.w,self.h))
+                self.defaultImage= pygame.transform.smoothscale(self.loadimage("GC"),(self.w,self.h))
             elif self.type==2 :
-                self.image = pygame.transform.smoothscale(self.loadimage("R1"),(self.w,self.h))
+                self.defaultImage = pygame.transform.smoothscale(self.loadimage("R1"),(self.w,self.h))
             elif self.type==4 :
-                self.image = pygame.transform.smoothscale(self.loadimage("R2"),(self.w,self.h))
+                self.defaultImage = pygame.transform.smoothscale(self.loadimage("R2"),(self.w,self.h))
             else :
-                self.image = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
+                self.defaultImage = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
+            self.image = self.defaultImage.copy()
             self.initWHoles()
 #             self.dmap = dmap
             self.setFunction({"tile":self,"canRotate":True})
@@ -149,41 +150,33 @@ class TileM(pygame.sprite.Sprite):
             WHmax=3
         else :
             WHmax=2
-        print("WHmin = "+str(WHmin)+" WHmax = "+str(WHmax))
+#         print("WHmin = "+str(WHmin)+" WHmax = "+str(WHmax))
         nbWH = random.randint(WHmin,WHmax)
-        print("len ="+str(len(d))+" nbWH "+str(nbWH))
+#         print("len ="+str(len(d))+" nbWH "+str(nbWH))
         while len(d)<nbWH:
             seg = random.randint(0,5)
             if str(seg) not in d:
-                print("a")
                 d[str(seg)]=(edgesCenter[seg]) 
         
         self.edges = d.copy()
-        
+        self.drawWH()
+    
+    def drawWH(self):
+        self.image = self.defaultImage.copy()
         for wh in self.edges:
             iwh = int(wh)
             ri = pygame.transform.rotate(WHimage,edgesCenter[iwh][2])
             r=ri.get_rect()
             r.centerx = edgesCenter[iwh][0]
             r.centery = edgesCenter[iwh][1]
-            self.image.blit(ri,r) 
-         
-        print(self.toString())
+            self.image.blit(ri,r)     
            
     def toString(self):
         s = "("+str(self.x)+","+str(self.y)+") type="+str(self.type)+" edges="+str(len(self.edges))
         return s
     
-    def rotate(self,angle):
-        #s = self.image.copy()        
+    def rotate(self,angle):        
         if angle%60 == 0:
-            ri = pygame.transform.rotate(self.image,angle)
-            r = ri.get_rect()
-            r.centerx = self.rect.centerx
-            r.centery = self.rect.centery
-            self.image = ri
-            self.rect = r
-            self.angle += angle
             
             tmpdict = dict()
             for e in self.edges:
@@ -195,6 +188,7 @@ class TileM(pygame.sprite.Sprite):
                 tmpdict[str(newE)] = self.edges[e]
             self.edges = tmpdict
             
+            self.drawWH()
             if abs(self.angle) == 360:
                 self.angle = 0
     

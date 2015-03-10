@@ -9,6 +9,7 @@ import data.Resources as res
 import eclipse_map as emap
 import eclipse_menu as men
 import eclipse_player_interface as epintf
+import eclipse_player as eplayer
 import time
 import random
 from test.test_typechecks import Integer
@@ -45,6 +46,9 @@ def manageEvent(event):
             initHome(homeSurface, 1)
         if isinstance(event.chMenu, int):
             emap.initMapForPlayers(dMAP, event.chMenu)
+            allMapSprites.remove(intf.items)
+            intf.setPlayer(eplayer.Player())
+            allMapSprites.add(intf.items)
             global gameIsPlaying
             gameIsPlaying = True
     if event.type == res.TILEEVENT:
@@ -78,7 +82,8 @@ def onKeyDown(event):
 
 def drawGame():
     gameSurface.fill(res.BLACK)
-    MAP.draw(gameSurface)
+#     MAP.draw(gameSurface)
+    allMapSprites.draw(gameSurface)
     windowSurface.blit(gameSurface,gameSurface.get_rect())
 #     allHomeSprites.draw(gameSurface)
 
@@ -133,7 +138,7 @@ while True:
 #         print(str(allMapSprites.sprites())) 
         intf = epintf.PlayerInterface(gameSurface)
         allMapSprites.add(intf) 
-        print(str(intf.getItems().sprites())) 
+#         print(str(intf.getItems().sprites())) 
         allMapSprites.add(intf.getItems())
         initHome(homeSurface)
     
