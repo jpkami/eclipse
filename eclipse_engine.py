@@ -45,22 +45,39 @@ def onMouseUp(event):
         clickedSprites[-1].onClick()
     
 def onKeyDown(event):
+    if event.key==pygame.K_DELETE:
+        pygame.quit()
+        res.sys.exit()    
+    if event.key == pygame.K_s:
+        global gameIsPlaying
+        gameIsPlaying = True
     pass
 
 def drawGame():
-    pass
+    gameSurface.fill(res.BLACK)
+    MAP.draw(gameSurface)
+    windowSurface.blit(gameSurface,gameSurface.get_rect())
+    allSprites.draw(gameSurface)
 
 def drawMenu():
     gameMenu.draw(windowSurface)
 
 def drawHome():
-    write('ECLIPSE', 120, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/4)
-    write('A new Dawn for the Galaxy', 100, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/2)
-    allSprites.draw(windowSurface)
-    write('press s to start', 40, res.WINDOWWIDTH/2, res.WINDOWHEIGHT-40)
+    windowSurface.blit(homeSurface,homeSurface.get_rect())
+    allSprites.draw(homeSurface)
 
-def initGame():
+def initGame(gameSurface):
     pass
+
+def initHome(homeSurface):
+    write('ECLIPSE', 120, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/4,homeSurface)
+    write('A new Dawn for the Galaxy', 100, res.WINDOWWIDTH/2, res.WINDOWHEIGHT/2,homeSurface)#c'est sale
+    b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50)
+    b.writecenter("start", 20, res.BLACK)
+    b.onClick = lambda x="":print("c'est la fonction lambda qui est cliquee")
+    allSprites.add(b)
+    write('press s to start', 40, res.WINDOWWIDTH/2, res.WINDOWHEIGHT-40,homeSurface)
+    
 
 while True:
     if not res.gameInited:
@@ -71,11 +88,11 @@ while True:
         res.gameInited = True
         gameIsPlaying = False
         menuIsShowing = False
-        allSprites = pygame.sprite.LayeredUpdates() 
-        #c'est sale
-        b= men.Button(res.WINDOWWIDTH/2,3*res.WINDOWHEIGHT/4,100,50)
-        b.writecenter("start", 20, res.BLACK)
-        allSprites.add(b)
+        allSprites = pygame.sprite.LayeredUpdates()
+        gameSurface = windowSurface.copy()
+        menuSurface = windowSurface.copy()
+        homeSurface = windowSurface.copy()
+        initHome(homeSurface)
     
     for event in pygame.event.get():
         manageEvent(event)
