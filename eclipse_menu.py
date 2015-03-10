@@ -17,6 +17,7 @@ class Button(pygame.sprite.Sprite):
         r = pygame.Rect(x,y,w,h)
         r.center=(x,y)
         self.rect = r
+        self.event = pygame.event.Event(pygame.USEREVENT, {})
         
     def write(self, text, fontSize, x, y, color=res.WHITE):
     
@@ -36,7 +37,11 @@ class Button(pygame.sprite.Sprite):
 #         self.menuSurface.blit(textR, textRect)    
         self.image.blit(textR, textRect)   
     
+    def setFunction(self,args):
+        self.event = pygame.event.Event(pygame.USEREVENT, args)
+    
     def onClick(self):
+        
         print("bouton clique")
          
 class GameMenu(pygame.sprite.Sprite):
