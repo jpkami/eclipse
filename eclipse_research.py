@@ -9,12 +9,6 @@ class Research():
     classdocs
     Class for research tiles
     '''
-    name = ""
-    cost = ""
-    maxReducedCost = ""
-    #0:military, 1:advanced, 2:nano
-    type = 0
-
     def __init__(self, name,type, cost,maxRC):
         '''
         Constructor
@@ -24,3 +18,18 @@ class Research():
         self.cost = cost
         self.maxReducedCost = maxRC
     
+class BombeNeutron(Research):
+    def __init__(self):
+        Research.__init__(self, "BombeNeutron", "Militaire", 2, 2)
+
+class BouclierGauss(Research):
+    def __init__(self):
+        Research.__init__(self, "BouclierGauss", "Avancee", 2, 2)
+            
+class BaseStellaire(Research):
+    def __init__(self):
+        Research.__init__(self, "BaseStellaire", "Militaire", 4, 3)
+        
+                
+        
+        

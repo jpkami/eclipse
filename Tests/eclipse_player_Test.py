@@ -23,10 +23,14 @@ class Test(unittest.TestCase):
         
         joueur = HegemonieOrion()
         print(joueur.flotte[0].type)
-        print(joueur.flotte[0].canons)
+        print("joueur.maxmove " +str(joueur.maxMove))
+        print("joueur.tuilescombat " +str(joueur.tuilesCombat))
+        print("joueur.maxreputcombat " +str(joueur.maxReputationCombat))
+        print("joueur.science " +str(joueur.science))
+        
         self.assertTrue(joueur.flotte[0].type == "Fregate")
         
-        joueur = Human()
+        joueur = Human(221)
         print(joueur.flotte[0].type)
         print(joueur.flotte[0])
         print(joueur.flotte[0].prix)
