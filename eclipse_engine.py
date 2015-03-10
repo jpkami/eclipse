@@ -124,14 +124,17 @@ while True:
         dMAP=tmpMAP[1]
         res.gameInited = True
         gameIsPlaying = False
-        menuIsShowing = False
-        allHomeSprites = pygame.sprite.LayeredUpdates()
-        allMapSprites = MAP
-        intf = epintf.PlayerInterface(windowSurface)
-        allMapSprites.add(intf)            
+        menuIsShowing = False           
         gameSurface = windowSurface.copy()
         menuSurface = windowSurface.copy()
         homeSurface = windowSurface.copy()
+        allHomeSprites = pygame.sprite.LayeredUpdates()
+        allMapSprites = MAP
+#         print(str(allMapSprites.sprites())) 
+        intf = epintf.PlayerInterface(gameSurface)
+        allMapSprites.add(intf) 
+        print(str(intf.getItems().sprites())) 
+        allMapSprites.add(intf.getItems())
         initHome(homeSurface)
     
     for event in pygame.event.get():

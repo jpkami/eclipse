@@ -22,6 +22,7 @@ mainClock = pygame.time.Clock()
 # TIMER_TICK = USEREVENT +1
 BUTTONEVENT = USEREVENT
 TILEEVENT = USEREVENT+1
+PLAYEREVENT = USEREVENT+2
 
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 
