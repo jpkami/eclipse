@@ -55,6 +55,12 @@ def manageEvent(event):
         if isinstance(event.tile, emap.TileM):
             if event.canRotate:
                 event.tile.rotate(-60)
+    if event.type == res.PLAYEREVENT:
+        allMapSprites.remove(intf.getItems())
+        print( "intf sprites removed")
+        intf.setPlayer(eplayer.HegemonieOrion())
+        allMapSprites.add(intf.getItems())
+#         print( "new intf sprites added")
 #             print("nbJoueur = "+str(event.chMenu))
         
 
@@ -68,6 +74,7 @@ def onMouseUp(event):
     
     if len(clickedSprites)>0:
         clickedSprites[-1].onClick()
+        
     
 def onKeyDown(event):
     if event.key==pygame.K_DELETE:
@@ -139,7 +146,7 @@ while True:
         intf = epintf.PlayerInterface(gameSurface)
         allMapSprites.add(intf) 
 #         print(str(intf.getItems().sprites())) 
-        allMapSprites.add(intf.getItems())
+#         allMapSprites.add(intf.getItems())
         initHome(homeSurface)
     
     for event in pygame.event.get():

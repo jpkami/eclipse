@@ -9,6 +9,7 @@ from eclipse_research import BaseStellaire, BouclierGauss, BombeNeutron
 from eclipse_tile import Tile
 
 pygame = res.pygame
+
 # Classes
 
     # The Player

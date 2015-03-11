@@ -52,6 +52,11 @@ INTRO.set_volume(0.0)
 ALLSOUNDS.append(INTRO)
 
 
+cubeTable= (28,24,21,18,15,12,10,8,6,4,3,2)
+influenceTable = (-30,-25,-21,-17,-10,-7,-5,-3,-2,-1,0,0)
+technoReducTable = (0,-1,-2,-3,-4,-6,-8)
+technoVPTable = (0,0,0,1,2,3,5)
+
 # pygame.time.set_timer(TIMER_TICK,1000)
 displayMenu = False
 gameIsPlaying = False

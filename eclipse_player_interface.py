@@ -19,27 +19,28 @@ class PlayerButton(pygame.sprite.Sprite):
         '''
         pygame.sprite.Sprite.__init__(self)
         bSize = round(surface.get_rect().h/3)
-        self.rect = pygame.Rect((x,y),(bSize*2,bSize))
-        self.image = pygame.surface.Surface((self.rect.w,self.rect.h))
+        self.rect = pygame.Rect((x,y),(bSize,bSize))
+        self.defaultImage = pygame.surface.Surface((self.rect.w,self.rect.h))
         self.color = color
-        self.image.fill(color)
-        self.defaultImage = self.image.copy()
+        self.defaultImage.fill(color)
+        self.image = self.defaultImage.copy()
         self.event = pygame.event.Event(res.PLAYEREVENT, {"button":self})
     
     def setText(self,text):
+        self.image=self.defaultImage.copy()
         font = pygame.font.SysFont('helvetica', 30)
         textR = font.render(text, True, res.BLACK)
         textRect = textR.get_rect()
         textRect.center = (self.rect.w/2,self.rect.h/2)
 #         self.menuSurface.blit(textR, textRect) 
-   
+#         print("bsettext : "+text)
         self.image.blit(textR, textRect)
     
     def setImage(self,image):
         tmpImage = self.loadimage(image)
         resizedImage = pygame.transform.smoothscale(tmpImage,(self.rect.w,self.rect.h))
-        self.image = resizedImage
-        self.defaultImage = self.image.copy()
+        self.defaultImage = resizedImage
+        self.image = self.defaultImage.copy()
         
         pass
     
@@ -52,9 +53,6 @@ class PlayerButton(pygame.sprite.Sprite):
     
     def onClick(self):
         pygame.event.post(self.event)
-        self.image=self.defaultImage.copy()
-        self.setText("clique")
-        print("button clicked : color = "+str(self.color))
         
         
 class PlayerInterface(pygame.sprite.Sprite):
@@ -76,15 +74,19 @@ class PlayerInterface(pygame.sprite.Sprite):
         self.items = pygame.sprite.Group()
 #         self.image.set_alpha(80)
         self.setPortrait("player1")
-        self.setRessources()
-        self.setCubes()
+#         self.setRessources()
+#         self.setCubes()
     
     def setPlayer(self,player):
         self.player = player
 #         self.setPortrait("player1")
-#         self.items.empty()
+#         print(str(self.items))
+        self.items.empty()
         self.setRessources((self.player.credits,self.player.science,self.player.materiaux))
         self.setCubes((self.player.cubesCredit,self.player.cubesScience,self.player.cubesMateriaux))
+        self.setActionsButtons()
+        self.setReactionsButtons()
+        self.setPassButtons()
         print("player set : "+str(self.player.cubesCredit))
     
     def setPortrait(self,image):
@@ -102,13 +104,16 @@ class PlayerInterface(pygame.sprite.Sprite):
         bc = PlayerButton(self.portraitOffset,0,self.image,(235,110,0))
         bc.setImage("resC")
         bc.setText(str(args[0]))
+        print("credit = "+str(args[0]))
         self.items.add(bc)
         bs = PlayerButton(self.portraitOffset,bc.rect.h,self.image,(240,170,180))
         bs.setImage("resS")
+        print("science = "+str(args[1]))
         bs.setText(str(args[1]))
         self.items.add(bs)
         bm = PlayerButton(self.portraitOffset,2*bc.rect.h,self.image,(145,80,45))
         bm.setImage("resM")
+        print("materiaux = "+str(args[2]))
         bm.setText(str(args[2]))
         self.items.add(bm)
         self.ResOffset = bs.rect.w +5
@@ -117,14 +122,27 @@ class PlayerInterface(pygame.sprite.Sprite):
         
     def setCubes(self,args=(0,0,0)):
         bc = PlayerButton(self.portraitOffset+self.ResOffset,0,self.image,(235,110,0))
-        bc.setText(str(args[0]))
+        bc.setText(str(res.cubeTable[args[0]])+"/"+str(res.cubeTable[args[0]-1]))
         self.items.add(bc)
         bs = PlayerButton(self.portraitOffset+self.ResOffset,bc.rect.h,self.image,(240,170,180))
-        bs.setText(str(args[1]))
+        bs.setText(str(res.cubeTable[args[1]])+"/"+str(res.cubeTable[args[1]-1]))
         self.items.add(bs)
         bm = PlayerButton(self.portraitOffset+self.ResOffset,2*bc.rect.h,self.image,(145,80,45))
-        bm.setText(str(args[2]))
+        bm.setText(str(res.cubeTable[args[2]])+"/"+str(res.cubeTable[args[2]-1]))
         self.items.add(bm)    
+    
+    def setPassButtons(self):
+        bp = PlayerButton(self.rect.w-self.ResOffset,0,self.image,res.WHITE)
+        bp.setText("PASS")
+        bp.setFunction({"button":self,"action":"pass"})
+        self.items.add(bp)
+        pass
+    
+    def setReactionsButtons(self):
+        pass
+    
+    def setActionsButtons(self):
+        pass
         
     def getItems(self):
         return self.items
