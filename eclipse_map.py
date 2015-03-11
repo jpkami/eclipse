@@ -21,7 +21,7 @@ edgesCenter = [(round(HexW/2),0,0), (round(7*HexW/8)-5,round(HexH/4)+5,-60), (ro
 WHimage = pygame.transform.smoothscale(res.WHOLE,(round(HexW/16),round(HexH/16)))
 #Classes
     # return a list with the rect to draw, drawn later with drawGame(), and and dict to get the Tiles from coordinates
-def setMap(w=7,h=9):
+def setMap(w=7,h=13):
     if w%2==0:
         w+=1
     if h%2==0:
@@ -75,6 +75,7 @@ class TileM(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self)
         self.isVisible = False
+        self.isHighlighted = False
         self.l=res.CENTERX+self.w*3*x/4-self.w/2
         self.t=res.CENTERY+self.h*y/2-self.h/2
         self.rect = pygame.Rect(self.l,self.t,self.w,self.h)
@@ -90,14 +91,35 @@ class TileM(pygame.sprite.Sprite):
 
         # self.image = pygame.transform.smoothscale(self.loadimage("wHex"),(self.w,self.h))
         self.image = self.texture
+        self.defaultImage = self.texture.copy()
 #         self.image = pygame.surface.Surface((0,0))
         self.event = pygame.event.Event(res.TILEEVENT, {"tile":self,"canRotate":False})
+    
+    def highlight(self):
+        if self.isHighlighted:
+            self.restore()
+        else:
+            self.isHighlighted = True
+            self.image= pygame.transform.smoothscale(self.loadimage("hexH"),(self.w,self.h))
+    
+    def restore(self):
+        self.isHighlighted = False
+        self.image = self.defaultImage.copy()
         
+         
     def setVisible(self,b):
         self.isVisible = b
         
     def getCoord(self):
         return (self.x,self.y)
+    
+    def highlightPossibleNeighbours(self):
+        pos=((0,-2),(1,-1),(1,1),(0,2),(-1,1),(-1,-1))
+        if len(self.edges)>0:
+            for e in self.edges:
+                p = pos[int(e)]
+                sp = (self.x+p[0],self.y+p[1])
+                self.dmap[sp].highlight()
     
     def getConnectedNeighbours(self,tmap):
         pos=((0,-2),(1,-1),(1,1),(0,2),(-1,1),(-1,-1))

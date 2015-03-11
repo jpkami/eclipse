@@ -89,7 +89,11 @@ def onButtonEvent(event):
 def onTileEvent(event):
     if isinstance(event.tile, emap.TileM):
             if event.canRotate:
-                event.tile.rotate(-60)
+#                 event.tile.rotate(-60)
+#                 event.tile.setdMap(dMAP)
+                event.tile.highlightPossibleNeighbours()
+            else:
+                event.tile.highlight()
 
 def onPlayerEvent(event): 
     if "action" in event.__dict__:
