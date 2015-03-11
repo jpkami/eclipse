@@ -46,19 +46,30 @@ def setMap(w=7,h=13):
     return (tileGroup,tileDict)
  
 def initMapForPlayers(dMAP,player):
+    l=list()
     if player == 2:
         dMAP[(0,4)].initTile()
+        l.append(dMAP[(0,4)])
         dMAP[(0,-4)].initTile()
+        l.append(dMAP[(0,-4)])
     elif player == 3:
         dMAP[(0,4)].initTile()
+        l.append(dMAP[(0,4)])
         dMAP[(2,-2)].initTile()
+        l.append(dMAP[(2,-2)])
         dMAP[(-2,-2)].initTile()
+        l.append(dMAP[(-2,-2)])
     elif player == 4:
         dMAP[(2,2)].initTile()
+        l.append(dMAP[(2,2)])
         dMAP[(-2,2)].initTile()
+        l.append(dMAP[(-2,2)])
         dMAP[(2,-2)].initTile()
-        dMAP[(-2,-2)].initTile() 
-        
+        l.append(dMAP[(2,-2)])
+        dMAP[(-2,-2)].initTile()
+        l.append(dMAP[(-2,-2)]) 
+     
+    return l   
     # The Tile for Map
 class TileM(pygame.sprite.Sprite):
     isInitialised = False
@@ -100,11 +111,13 @@ class TileM(pygame.sprite.Sprite):
             self.restore()
         else:
             self.isHighlighted = True
+            self.setFunction({"tile":self,"canRotate":False,"selected":True})
             self.image= pygame.transform.smoothscale(self.loadimage("hexH"),(self.w,self.h))
     
-    def restore(self):
-        self.isHighlighted = False
-        self.image = self.defaultImage.copy()
+    def restore(self):     
+        if self.isHighlighted:
+            self.isHighlighted = False
+            self.image = self.defaultImage.copy()
         
          
     def setVisible(self,b):

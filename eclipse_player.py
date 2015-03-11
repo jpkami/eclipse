@@ -28,7 +28,8 @@ class Player():
         self.cubesScience = cubesScience
         self.cubesMateriaux = cubesMateriaux
         self.disquesInfluence = disquesInfluence
-        self.tiles = tiles
+#         self.tiles = tiles
+        self.tiles = list()
         self.tuilesCombat = []
         
         self.intercepteurs = 8
@@ -124,10 +125,11 @@ class Human(Player):
         self.color = color
         self.portrait=portrait
         Player.__init__(self, technoInitiales=[BaseStellaire()]) 
-        self.tiles = [Tile(tileId=tileId)]
+#         self.tiles = [Tile(tileId=tileId)]
+        self.tiles = list()
         self.modeleIntercepteur = [BaseIntercepteurHumain(), CanonPlasma(), Vide(), Vide()]
         
-        self.flotte = [Intercepteur(player=self, tile=self.tiles[0])]
+#         self.flotte = [Intercepteur(player=self, tile=self.tiles[0])]
 
 class HegemonieOrion(Player):
     def __init__(self, tile=None):
@@ -135,5 +137,6 @@ class HegemonieOrion(Player):
                         science=3, materiaux=5, technoInitiales=[BouclierGauss(), BombeNeutron()])
         self.modeleFregate = [CanonPlasma(), CanonPlasma()]
         # TODO modeles
-        self.tiles = [Tile(tileId=232)]
-        self.flotte = [Fregate(player=self, tile=self.tiles[0])]
+#         self.tiles = [Tile(tileId=232)]
+        self.tiles = list()
+#         self.flotte = [Fregate(player=self, tile=self.tiles[0])]

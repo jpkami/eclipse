@@ -76,10 +76,13 @@ def onButtonEvent(event):
         initHome(homeSurface, 1)
     if isinstance(event.chMenu, int):
         pl = (eplayer.Human(111,(45,45,100)),eplayer.Human(111,res.RED),eplayer.Human(111,res.GREEN),eplayer.Human(111,res.YELLOW))
+        l = emap.initMapForPlayers(dMAP, event.chMenu)
         for p in range(event.chMenu):
+            print(str(l[p]))
+            pl[p].tiles.append(l[p])
             game.addPlayers(pl[p])
 #             game.numberPlayers(eplayer.Human(111,(45,45,100)),eplayer.Human(111,res.RED),eplayer.Human(111,res.GREEN))
-        emap.initMapForPlayers(dMAP, event.chMenu)
+        
         allMapSprites.remove(intf.items)
         intf.setPlayer(pl[0])
         allMapSprites.add(intf.items)
@@ -89,22 +92,39 @@ def onButtonEvent(event):
 def onTileEvent(event):
     if isinstance(event.tile, emap.TileM):
             if event.canRotate:
-#                 event.tile.rotate(-60)
-#                 event.tile.setdMap(dMAP)
-                event.tile.highlightPossibleNeighbours()
+                event.tile.rotate(-60)
+                event.tile.setdMap(dMAP)
+#                 event.tile.highlightPossibleNeighbours()
+            if "selected" in event.__dict__:
+                if event.selected:
+                    event.tile.initTile()
+                    for t in MAP:
+                        if isinstance(t, emap.TileM):
+                            t.restore()
+                    pygame.event.post(pygame.event.Event(res.PLAYEREVENT, {"action":"endOfAction"}))
             else:
-                event.tile.highlight()
+#                 event.tile.highlight()
+                pass
 
 def onPlayerEvent(event): 
     if "action" in event.__dict__:
         if event.action == "pass":
             event.player.hasPassed = True
+        if event.action =="explore":
+            print(str(event.player.tiles))
+            for t in event.player.tiles:
+                t.highlightPossibleNeighbours()
+            
+#             pygame.event.post(pygame.event.Event(res.PLAYEREVENT, {"action":"endOfAction"}))
         print("action = "+str(event.action))
-        result = game.endOfAction()
-        if result[0] =="action":
-            allMapSprites.remove(intf.getItems())
-            intf.setPlayer(result[1])
-            allMapSprites.add(intf.getItems())
+        
+        if event.action == "endOfAction":
+            result = game.endOfAction()
+            
+            if result[0] =="action":
+                allMapSprites.remove(intf.getItems())
+                intf.setPlayer(result[1])
+                allMapSprites.add(intf.getItems())
     else:
         pass
 
