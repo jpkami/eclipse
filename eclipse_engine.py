@@ -10,6 +10,7 @@ import eclipse_map as emap
 import eclipse_menu as men
 import eclipse_player_interface as epintf
 import eclipse_player as eplayer
+import eclipse_game as g
 import time
 import random
 from test.test_typechecks import Integer
@@ -22,7 +23,7 @@ MAP = pygame.sprite.Group()
 #Functions
 popUpText =""
 gameSurface = windowSurface.copy()
-
+game = g.Game()
 def write(text, fontSize, x, y,s=windowSurface, color=res.WHITE):
     font = pygame.font.SysFont(None, fontSize)
     
@@ -41,40 +42,11 @@ def manageEvent(event):
     if event.type == MOUSEBUTTONUP:
         onMouseUp(event)
     if event.type == res.BUTTONEVENT:
-        print(str(event))
-        if event.chMenu == "playerSelect":
-            initHome(homeSurface, 1)
-        if isinstance(event.chMenu, int):
-            emap.initMapForPlayers(dMAP, event.chMenu)
-            allMapSprites.remove(intf.items)
-            intf.setPlayer(eplayer.Player())
-            allMapSprites.add(intf.items)
-            global gameIsPlaying
-            gameIsPlaying = True
+        onButtonEvent(event)
     if event.type == res.TILEEVENT:
-        if isinstance(event.tile, emap.TileM):
-            if event.canRotate:
-                event.tile.rotate(-60)
+        onTileEvent(event)
     if event.type == res.PLAYEREVENT:
-        allMapSprites.remove(intf.getItems())
-        print( "intf sprites removed")
-        intf.setPlayer(eplayer.HegemonieOrion())
-        allMapSprites.add(intf.getItems())
-#         print( "new intf sprites added")
-#             print("nbJoueur = "+str(event.chMenu))
-        
-
-def onMouseUp(event):
-#     print(str(allHomeSprites.get_sprites_at(event.pos)))
-    clickedSprites = None
-    if not gameIsPlaying and not menuIsShowing:
-        clickedSprites = allHomeSprites.get_sprites_at(event.pos)
-    elif gameIsPlaying:
-        clickedSprites = allMapSprites.get_sprites_at(event.pos)
-    
-    if len(clickedSprites)>0:
-        clickedSprites[-1].onClick()
-        
+        onPlayerEvent(event)
     
 def onKeyDown(event):
     if event.key==pygame.K_DELETE:
@@ -86,6 +58,51 @@ def onKeyDown(event):
         global menuIsShowing
         menuIsShowing = False
     pass
+
+def onMouseUp(event):
+#     print(str(allHomeSprites.get_sprites_at(event.pos)))
+    clickedSprites = None
+    if not gameIsPlaying and not menuIsShowing:
+        clickedSprites = allHomeSprites.get_sprites_at(event.pos)
+    elif gameIsPlaying:
+        clickedSprites = allMapSprites.get_sprites_at(event.pos)
+    
+    if len(clickedSprites)>0:
+        clickedSprites[-1].onClick()
+       
+def onButtonEvent(event):
+#         print(str(event))
+    if event.chMenu == "playerSelect":
+        initHome(homeSurface, 1)
+    if isinstance(event.chMenu, int):
+        pl = (eplayer.Human(111,(45,45,100)),eplayer.Human(111,res.RED),eplayer.Human(111,res.GREEN),eplayer.Human(111,res.YELLOW))
+        for p in range(event.chMenu):
+            game.addPlayers(pl[p])
+#             game.numberPlayers(eplayer.Human(111,(45,45,100)),eplayer.Human(111,res.RED),eplayer.Human(111,res.GREEN))
+        emap.initMapForPlayers(dMAP, event.chMenu)
+        allMapSprites.remove(intf.items)
+        intf.setPlayer(pl[0])
+        allMapSprites.add(intf.items)
+        global gameIsPlaying
+        gameIsPlaying = True
+        
+def onTileEvent(event):
+    if isinstance(event.tile, emap.TileM):
+            if event.canRotate:
+                event.tile.rotate(-60)
+
+def onPlayerEvent(event): 
+    if "action" in event.__dict__:
+        if event.action == "pass":
+            event.player.hasPassed = True
+        print("action = "+str(event.action))
+        result = game.endOfAction()
+        if result[0] =="action":
+            allMapSprites.remove(intf.getItems())
+            intf.setPlayer(result[1])
+            allMapSprites.add(intf.getItems())
+    else:
+        pass
 
 def drawGame():
     gameSurface.fill(res.BLACK)

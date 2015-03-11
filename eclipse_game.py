@@ -16,7 +16,7 @@ class Game:
     def endOfAction(self):
         numberOfPlayersThatHavePassed = 0
         for player in self.players:
-            if player.hasPassed():
+            if player.hasPassed:
                 numberOfPlayersThatHavePassed += 1
         if numberOfPlayersThatHavePassed == len(self.players):
             self.phase = "Combat"
@@ -91,7 +91,11 @@ class Game:
         self.currentplayer = self.players[0]
         self.firstPlayer = self.players[0]        
             
-    
+    def addPlayers(self, player):
+        self.players.append(player)
+        self.currentplayer = self.players[0]
+        self.firstPlayer = self.players[0]        
+            
     # start new game
     def mainGame(self):
         # select number of players

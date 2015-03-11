@@ -100,7 +100,9 @@ class Player():
         return what.prix <= self.materiaux
       
 class Human(Player):
-    def __init__(self,tileId=221):
+    def __init__(self,tileId=221,color=res.RED,portrait="player1"):
+        self.color = color
+        self.portrait=portrait
         Player.__init__(self, technoInitiales=[BaseStellaire()]) 
         self.tiles = [Tile(tileId=tileId)]
         self.modeleIntercepteur = [BaseIntercepteurHumain(), CanonPlasma(), Vide(), Vide()]
