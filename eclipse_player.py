@@ -99,7 +99,7 @@ class Player():
         return what.prix <= self.materiaux
       
 class Human(Player):
-    def __init__(self,tileId):
+    def __init__(self,tileId=221):
         Player.__init__(self, technoInitiales=[BaseStellaire()]) 
         self.tiles = [Tile(tileId=tileId)]
         self.modeleIntercepteur = [BaseIntercepteurHumain(), CanonPlasma(), Vide(), Vide()]

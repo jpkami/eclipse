@@ -30,7 +30,7 @@ class Test(unittest.TestCase):
         
         self.assertTrue(joueur.flotte[0].type == "Fregate")
         
-        joueur = Human(221)
+        joueur = Human()
         print(joueur.flotte[0].type)
         print(joueur.flotte[0])
         print(joueur.flotte[0].prix)
