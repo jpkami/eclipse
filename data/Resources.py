@@ -6,7 +6,7 @@ from pygame.locals import *
 
 #Constant of the board of the game
 WINDOWWIDTH = 1024
-WINDOWHEIGHT = 768
+WINDOWHEIGHT =512
 CENTERX = round(WINDOWWIDTH/2)
 CENTERY = round(WINDOWHEIGHT/2)
 HEXMSIZE = round(WINDOWHEIGHT/5)

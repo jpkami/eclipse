@@ -12,14 +12,20 @@ class Game:
         
         self.availableTechnologies = []
     
-            
+    def endOfInit(self):
+        self.nbPlayers = len(self.players)
+        if self.nbPlayers == 2:
+            self.remove=4
+        else:
+            self.remove=self.nbPlayers+3
+                
     def endOfAction(self):
         numberOfPlayersThatHavePassed = 0
         for player in self.players:
             if player.hasPassed:
                 numberOfPlayersThatHavePassed += 1
         if numberOfPlayersThatHavePassed == len(self.players):
-            self.phase = "Combat"
+            self.phase = "combat"
         else : 
             self.currentplayer = self.players[(self.players.index(self.currentplayer) + 1) % len(self.players)]
         return self.phase, self.currentplayer
@@ -59,22 +65,18 @@ class Game:
     def cleanupPhase(self):
         print("turn number:" + str(self.turnNumber) + " cleanupPhase")
         # tirez nouvelles tuiles techno
-        
+        self.drawTechnologies()
         # chaque joueur reprend les disques influence, les cubes du cimetiere, 
         # retourne les vaisseaux de colons et carte résumé
         for player in self.players:
             player.hasPassed = False
-        
+            pass
+            pass
         # nouveau tour
         self.turnNumber += 1
     
-    def drawTechnologies(self, nbPlayers):
-        if nbPlayers == 2:
-            remove=4
-        else:
-            remove=nbPlayers+3
-        
-        for i in range(0, remove):
+    def drawTechnologies(self):
+        for i in range(0, self.remove):
             size = len(sacDeTechnologies)
             rand = randint(0,size-1)
             techno = sacDeTechnologies[rand]
@@ -82,7 +84,14 @@ class Game:
             del sacDeTechnologies[rand]
     
     def defineWinner(self):
-        print("The winner is:" + str(self.currentplayer))
+        #count victory points
+        self.LeaderBoard = []
+        for player in self.players:
+            self.LeaderBoard.append(player.name,player.computeScore())
+        self.LeaderBoard.sort(key=lambda tup: tup[1],reverse=True)
+        for play in self.LeaderBoard:
+            print(str(play)) 
+        print("The winner is:" + str(self.LeaderBoard[0]))
         pass
     
     def numberPlayers(self, *args):
@@ -99,7 +108,8 @@ class Game:
     # start new game
     def mainGame(self):
         # select number of players
-        self.numberPlayers(Human(), HegemonieOrion())    
+        self.numberPlayers(Human(), HegemonieOrion())  
+        self.endOfInit()  
         # choose race for each player
         # callmethodfromengine()
         # start turns

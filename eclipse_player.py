@@ -37,6 +37,8 @@ class Player():
         self.base_stellaire = 4 
         
         self.tuilesAmbassadeur = 4
+        self.tuilesDecouverte = 0
+        self.bonusRace = 0
         
         self.prixIntercepteur = prixIntercepteur
         self.prixFregate = prixFregate
@@ -58,9 +60,27 @@ class Player():
         self.maxExplore = maxExplore
         self.maxRecherche = maxRecherche
         self.technoInitiales = technoInitiales
-        
+        self.marqueurTraitre = False
         self.hasPassed = False
         pass
+    def computeScore(self):
+        score = 0
+        for i in self.tuilesCombat:
+            score+=i
+        score+= 4-self.tuilesAmbassadeur
+        for tile in self.tiles:
+            score+= tile.pointVictoire
+            if tile.monolithe:
+                score+=3
+        #tuiles decouvertes
+        score += self.tuilesDecouverte*2
+        #marqueur traitre
+        if self.marqueurTraitre:
+            score -= 2
+        #bonus race
+        score += self.bonusRace        
+        return score
+    
     
     def newTurn(self):
         self.hasPassed = False
