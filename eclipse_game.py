@@ -86,8 +86,8 @@ class Game:
     def defineWinner(self):
         #count victory points
         self.LeaderBoard = []
-        for player in self.players:
-            self.LeaderBoard.append(player.name,player.computeScore())
+        for i,player in enumerate(self.players):
+            self.LeaderBoard.append(("joueur "+str(i),player.computeScore()))
         self.LeaderBoard.sort(key=lambda tup: tup[1],reverse=True)
         for play in self.LeaderBoard:
             print(str(play)) 

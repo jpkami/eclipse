@@ -79,7 +79,7 @@ class Player():
             score -= 2
         #bonus race
         score += self.bonusRace        
-        return score
+        return score + 0.0001 * (self.credits+self.materiaux+self.science)
     
     
     def newTurn(self):
