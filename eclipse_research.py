@@ -9,7 +9,7 @@ class Research():
     classdocs
     Class for research tiles
     '''
-    def __init__(self, name,type, cost,maxRC):
+    def __init__(self, name,ResearchType, cost,maxRC):
         '''
         Constructor
         '''
@@ -31,5 +31,7 @@ class BaseStellaire(Research):
         Research.__init__(self, "BaseStellaire", "Militaire", 4, 3)
         
                 
-        
+sacDeTechnologies=[BombeNeutron(),BouclierGauss(),BaseStellaire(),BaseStellaire(),
+                   BouclierGauss(),BouclierGauss(),BouclierGauss(),BouclierGauss(),
+                   BouclierGauss(),BouclierGauss(),BouclierGauss()]
         
