@@ -13,7 +13,7 @@ class Tile(object):
 
     def __init__(self, tileId=0, casesScience=0, casesMateriaux=0, casesCredits=0, casesGrises=0,
                  casesScienceAvance=0, casesMateriauxAvance=0, casesCreditsAvance=0, orbitale=False, monolithe=False,
-                 anciens=0, decouverte=False, vaisseaux=[], pointVictoire=0):
+                 anciens=0, decouverte=False, vaisseaux=None, pointVictoire=0):
         '''
         Constructor
         '''
@@ -27,7 +27,7 @@ class Tile(object):
         self.casesGrises = casesGrises
         self.orbitale = orbitale
         self.monolithe = monolithe
-        self.vaisseaux = vaisseaux
+        self.vaisseaux = vaisseaux if vaisseaux is not None else []
         self.anciens = anciens
         self.pointVictoire = pointVictoire
         self.decouverte = decouverte
@@ -36,9 +36,6 @@ class Tile(object):
         playerset= set()
         for va in self.vaisseaux:
             playerset.add(va.player)
-        for i in playerset:
-            print(i)
-        print("hasCombat " + str(len(playerset)))
         if len(playerset) > 1:
             return True
         return False

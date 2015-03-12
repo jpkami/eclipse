@@ -16,10 +16,10 @@ pygame = res.pygame
 class Player():
     
     def __init__(self, playerCredits=2, science=2, materiaux=2, cubesCredit=11, cubesScience=11, cubesMateriaux=11,
-                 disquesInfluence=16, modeleIntercepteur=[CanonPlasma()], tiles=[],
-                 modeleFregate=[CanonPlasma()], modeleCroiseur=[CanonPlasma()], modeleBaseStellaire=[CanonPlasma()],
-                 flotte=[], prixIntercepteur=2, prixFregate=4, prixCroiseur=8, maxMove=3, maxBuild=2, maxImprove=2,
-                 maxColons=3, maxReputationCombat=4, tauxChange=2, maxExplore=1, maxRecherche=1, technoInitiales=[]):
+                 disquesInfluence=16, modeleIntercepteur=None, tiles=None,
+                 modeleFregate=None, modeleCroiseur=None, modeleBaseStellaire=None,
+                 flotte=None, prixIntercepteur=2, prixFregate=4, prixCroiseur=8, maxMove=3, maxBuild=2, maxImprove=2,
+                 maxColons=3, maxReputationCombat=4, tauxChange=2, maxExplore=1, maxRecherche=1, technoInitiales=None):
         
         self.credits = playerCredits
         self.science = science
@@ -28,8 +28,8 @@ class Player():
         self.cubesScience = cubesScience
         self.cubesMateriaux = cubesMateriaux
         self.disquesInfluence = disquesInfluence
-#         self.tiles = tiles
-        self.tiles = list()
+        self.tiles = tiles if tiles is not None else []
+        
         self.tuilesCombat = []
         
         self.intercepteurs = 8
@@ -45,13 +45,12 @@ class Player():
         self.prixFregate = prixFregate
         self.prixCroiseur = prixCroiseur
         
-        self.modeleIntercepteur = modeleIntercepteur
-        self.modeleFregate = modeleFregate
-        self.modeleCroiseur = modeleCroiseur
-        self.modeleBaseStellaire = modeleBaseStellaire        
-        
-        self.flotte = flotte
-        
+        self.modeleIntercepteur = modeleIntercepteur if modeleIntercepteur is not None else []
+        self.modeleFregate = modeleFregate if modeleFregate is not None else []
+        self.modeleCroiseur = modeleCroiseur if modeleCroiseur is not None else []
+        self.modeleBaseStellaire = modeleBaseStellaire if modeleBaseStellaire is not None else []
+                
+        self.flotte = flotte if flotte is not None else []
         self.maxMove = maxMove
         self.maxBuild = maxBuild
         self.maxImprove = maxImprove
@@ -60,10 +59,11 @@ class Player():
         self.tauxChange = tauxChange
         self.maxExplore = maxExplore
         self.maxRecherche = maxRecherche
-        self.technoInitiales = technoInitiales
+        
+        self.technoInitiales = technoInitiales if technoInitiales is not None else []
         self.marqueurTraitre = False
         self.hasPassed = False
-        pass
+        
     def computeScore(self):
         score = 0
         for i in self.tuilesCombat:

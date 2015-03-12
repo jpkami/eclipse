@@ -34,9 +34,7 @@ class Game:
     def startOfCombat(self):
         #check all the tiles, and see which have ships and put them in combats
         self.combats=[]
-        print("loop")
         for tile in self.tiles:
-            print("in loop")
             if tile.hasCombat():
                 self.combats.append(tile)
         #sort according to id
