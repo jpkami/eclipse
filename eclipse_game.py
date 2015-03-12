@@ -1,6 +1,7 @@
 from eclipse_player import Human, HegemonieOrion
 from random import randint
 from eclipse_research import sacDeTechnologies
+from eclipse_tile import Tile
 class Game:
     
     def __init__(self):
@@ -30,7 +31,19 @@ class Game:
             self.currentplayer = self.players[(self.players.index(self.currentplayer) + 1) % len(self.players)]
         return self.phase, self.currentplayer
             
-    
+    def startOfCombat(self):
+        #check all the tiles, and see which have ships and put them in combats
+        self.combats=[]
+        print("loop")
+        for tile in self.tiles:
+            print("in loop")
+            if tile.hasCombat():
+                self.combats.append(tile)
+        #sort according to id
+        
+        self.combats.sort(key=lambda tile:tile.id, reverse=True)
+        return self.combats
+        
     def actionPhase(self):
         # start turn : find first player in players
         self.currentplayer = self.firstPlayer
@@ -74,6 +87,7 @@ class Game:
             pass
         # nouveau tour
         self.turnNumber += 1
+        self.combats.clear()
     
     def drawTechnologies(self):
         for i in range(0, self.remove):

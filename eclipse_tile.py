@@ -3,6 +3,7 @@ Created on 10 mars 2015
 
 @author: charles
 '''
+from builtins import set
 
 class Tile(object):
     '''
@@ -30,3 +31,14 @@ class Tile(object):
         self.anciens = anciens
         self.pointVictoire = pointVictoire
         self.decouverte = decouverte
+
+    def hasCombat(self):
+        playerset= set()
+        for va in self.vaisseaux:
+            playerset.add(va.player)
+        for i in playerset:
+            print(i)
+        print("hasCombat " + str(len(playerset)))
+        if len(playerset) > 1:
+            return True
+        return False
