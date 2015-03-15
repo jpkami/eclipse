@@ -71,6 +71,28 @@ def initMapForPlayers(dMAP,player):
      
     return l   
     # The Tile for Map
+    
+
+class PlanetM(pygame.sprite.Sprite):
+    
+    def __init__(self,x,y,typeP,hexSurface):
+        pygame.sprite.Sprite.__init__(self)
+        self.typeP = typeP
+        pSize = round(hexSurface.get_rect().w/4)
+        self.rect = pygame.Rect((x-round(pSize/2),y-round(pSize/2)),(pSize,pSize))
+        self.image = self.loadimage(typeP+"planet")
+                
+    def loadimage(self,name):
+        im = pygame.image.load(os.path.join('data',name+'.png')).convert_alpha()       
+        return pygame.transform.smoothscale(im,(self.rect.w,self.rect.h))
+    
+    def setFunction(self,args):
+        pass
+    
+    def setOnClick(self):
+        pass    
+        
+    
 class TileM(pygame.sprite.Sprite):
     isInitialised = False
     dmap = dict()
@@ -166,6 +188,7 @@ class TileM(pygame.sprite.Sprite):
             self.image = self.defaultImage.copy()
             self.initWHoles()
 #             self.dmap = dmap
+            self.setPlanets(("C","CA","S","SA","M","MA"))
             self.setFunction({"tile":self,"canRotate":True})
             self.isInitialised = True
     
@@ -209,6 +232,25 @@ class TileM(pygame.sprite.Sprite):
     def toString(self):
         s = "("+str(self.x)+","+str(self.y)+") type="+str(self.type)+" edges="+str(len(self.edges))
         return s
+    
+    def setPlanets(self,planetTable):
+        w=self.rect.w
+        h=self.rect.h
+        i=0
+        planetPos=((round(w/2),round(h/4)),(round(3*w/4),round(3*h/8)),(round(3*w/4),round(5*h/8)),(round(w/2),round(3*h/4)),(round(w/4),round(5*h/8)),(round(w/4),round(3*h/8)))
+#         self.planetTable = list()
+        self.planetTable = pygame.sprite.Group()
+        if len(planetTable)>0:
+            for p in planetTable :
+                self.planetTable.add(PlanetM(planetPos[i][0],planetPos[i][1],p,self.image))
+                i+=1
+        
+        self.drawPlanets()
+    
+    def drawPlanets(self):
+        self.image = self.defaultImage.copy()
+        for p in self.planetTable:
+            self.image.blit(p.image,p.rect)     
     
     def rotate(self,angle):        
         if angle%60 == 0:

@@ -80,6 +80,8 @@ def onButtonEvent(event):
         for p in range(event.chMenu):
             print(str(l[p]))
             pl[p].tiles.append(l[p])
+            allMapSprites.add(l[p].planetTable)
+            print(str(allMapSprites))
             game.addPlayers(pl[p])
 #             game.numberPlayers(eplayer.Human(111,(45,45,100)),eplayer.Human(111,res.RED),eplayer.Human(111,res.GREEN))
         
@@ -93,13 +95,13 @@ def onTileEvent(event):
     if isinstance(event.tile, emap.TileM):
             if event.canRotate:
                 event.tile.rotate(-60)
-                event.tile.setdMap(dMAP)
+#                 event.tile.setdMap(dMAP)
 #                 event.tile.highlightPossibleNeighbours()
             if "selected" in event.__dict__:
                 if event.selected:
                     event.tile.initTile()
                     for t in MAP:
-                        if isinstance(t, emap.TileM):
+                        if isinstance(t, emap.TileM) and t is not event.tile:
                             t.restore()
                     pygame.event.post(pygame.event.Event(res.PLAYEREVENT, {"action":"endOfAction"}))
             else:
@@ -110,6 +112,7 @@ def onPlayerEvent(event):
     if "action" in event.__dict__:
         if event.action == "pass":
             event.player.hasPassed = True
+            pygame.event.post(pygame.event.Event(res.PLAYEREVENT, {"action":"endOfAction"}))
         if event.action =="explore":
             print(str(event.player.tiles))
             for t in event.player.tiles:
