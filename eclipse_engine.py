@@ -8,6 +8,7 @@ Created on 9 mars 2015
 import data.Resources as res
 import eclipse_map as emap
 import eclipse_menu as men
+import eclipse_combat_interface as combat
 import eclipse_player_interface as epintf
 import eclipse_player as eplayer
 import eclipse_game as g
@@ -49,13 +50,20 @@ def manageEvent(event):
         onPlayerEvent(event)
     
 def onKeyDown(event):
+    global gameIsPlaying
+    global menuIsShowing
+    global combatIsShowing
     if event.key==pygame.K_DELETE:
         pygame.quit()
         res.sys.exit()    
     if event.key == pygame.K_h:
-        global gameIsPlaying
         gameIsPlaying = False
-        global menuIsShowing
+        menuIsShowing = False
+        combatIsShowing = False
+        
+    if event.key == pygame.K_j:        
+        gameIsPlaying = False
+        combatIsShowing = True
         menuIsShowing = False
     pass
 
@@ -141,6 +149,11 @@ def drawGame():
 def drawMenu():
     gameMenu.draw(windowSurface)
 
+def drawCombat():
+        
+    gameCombat.draw(windowSurface)
+    gameCombat.items.draw(windowSurface)
+    
 def drawHome():
     windowSurface.blit(homeSurface,homeSurface.get_rect())
     allHomeSprites.draw(homeSurface)
@@ -175,16 +188,20 @@ def initHome(homeSurface,player = 0):
 while True:
     if not res.gameInited:
         gameMenu = men.GameMenu()
+        gameCombat = combat.CombatInterface()
         tmpMAP= emap.setMap()
         MAP=tmpMAP[0]
         dMAP=tmpMAP[1]
         res.gameInited = True
         gameIsPlaying = False
-        menuIsShowing = False           
+        menuIsShowing = False    
+        combatIsShowing = False       
         gameSurface = windowSurface.copy()
         menuSurface = windowSurface.copy()
+        combatSurface = windowSurface.copy()
         homeSurface = windowSurface.copy()
         allHomeSprites = pygame.sprite.LayeredUpdates()
+        allCombatSprites = pygame.sprite.LayeredUpdates()
         allMapSprites = MAP
 #         print(str(allMapSprites.sprites())) 
         intf = epintf.PlayerInterface(gameSurface)
@@ -200,6 +217,8 @@ while True:
         drawGame()        
     elif menuIsShowing:
         drawMenu()
+    elif combatIsShowing:
+        drawCombat()
     else:
         drawHome()
         

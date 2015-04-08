@@ -32,6 +32,7 @@ class Game:
         return self.phase, self.currentplayer
             
     def startOfCombat(self):
+        """return all the tiles where there is a combat, in the correct order"""
         #check all the tiles, and see which have ships and put them in combats
         self.combats=[]
         for tile in self.tiles:
@@ -68,6 +69,7 @@ class Game:
         print("all players have passed")
     
     def combatPhase(self):
+        
         print("turn number:" + str(self.turnNumber) + " combatPhase")
         pass
     def maintenancePhase(self):
