@@ -89,7 +89,7 @@ class PlanetM(pygame.sprite.Sprite):
     def setFunction(self,args):
         pass
     
-    def setOnClick(self):
+    def onClick(self):
         pass    
         
     
@@ -242,10 +242,10 @@ class TileM(pygame.sprite.Sprite):
         self.planetTable = pygame.sprite.Group()
         if len(planetTable)>0:
             for p in planetTable :
-                self.planetTable.add(PlanetM(planetPos[i][0],planetPos[i][1],p,self.image))
+                self.planetTable.add(PlanetM(self.rect.left+planetPos[i][0],self.rect.top+planetPos[i][1],p,self.image))
                 i+=1
         
-        self.drawPlanets()
+#         self.drawPlanets()
     
     def drawPlanets(self):
         self.image = self.defaultImage.copy()
